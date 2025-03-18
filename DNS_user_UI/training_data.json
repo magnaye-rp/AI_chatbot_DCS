@@ -1,0 +1,31 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey there!", "Good day!"],
+      "responses": ["Hey!", "Hello!", "Hi there!", "Greetings!"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye"],
+      "responses": ["Goodbye!", "Take care!", "See you soon!"]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful"],
+      "responses": ["You're welcome!", "Anytime!", "Glad to help!"]
+    },
+    {
+      "tag": "about",
+      "patterns": ["What can you do?", "Who are you?", "Tell me about yourself"],
+      "responses": ["I'm a chatbot built to assist you!", "I'm here to answer your questions!"]
+    },
+    {
+      "tag": "memes",
+      "patterns": ["snapple"],
+      "responses": [
+        "Hi, my name is Snapple.\nMy background consists of watermelon and lemonade.\nThe more you open this door and the more you hold me, the temperature goes down, and I'm not drinkable anymore.\nClose the goddamn door!"
+      ]
+    }
+  ]
+}
