@@ -1,63 +1,62 @@
 import json
-import random
 import numpy as np
-import tensorflow as tf
+import gensim
+from gensim.models import Word2Vec
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
-import pickle
+from sklearn.preprocessing import LabelEncoder
+from nltk.tokenize import word_tokenize
 
-# Load intents
-with open('training_data.json', 'r') as file:
-    intents = json.load(file)
+import nltk
+nltk.download('punkt')
 
-# Preprocess data
-words = []
+# Load training data
+with open("training_data.json", "r") as file:
+    data = json.load(file)
+
+# Prepare training data
+sentences = []
 labels = []
-docs = []
+classes = set()
 
-for intent in intents["intents"]:
+for intent in data["intents"]:
     for pattern in intent["patterns"]:
-        word_list = pattern.lower().split()  # Simple tokenization (no NLTK)
-        words.extend(word_list)
-        docs.append((word_list, intent["tag"]))
-        if intent["tag"] not in labels:
-            labels.append(intent["tag"])
+        tokenized_sentence = word_tokenize(pattern.lower())  # Lowercasing & tokenization
+        sentences.append(tokenized_sentence)
+        labels.append(intent["tag"])
+        classes.add(intent["tag"])
 
-words = sorted(set(words))
-labels = sorted(set(labels))
+classes = sorted(classes)  # Keep label order consistent
 
-# Save words and labels
-pickle.dump(words, open("words.pkl", "wb"))
-pickle.dump(labels, open("labels.pkl", "wb"))
+# Train Word2Vec model with more efficient parameters
+word2vec_model = Word2Vec(sentences, vector_size=300, window=5, min_count=1, workers=4, epochs=20)
+word2vec_model.save("word2vec.model")
 
-# Convert text to numerical data
-training = []
-output_empty = [0] * len(labels)
-
-for doc in docs:
-    bag = [1 if w in doc[0] else 0 for w in words]
-    output_row = list(output_empty)
-    output_row[labels.index(doc[1])] = 1
-    training.append([bag, output_row])
-
-random.shuffle(training)
-train_x = np.array([x[0] for x in training])
-train_y = np.array([x[1] for x in training])
-
-# Build model
-model = Sequential([
-    Dense(128, input_shape=(len(train_x[0]),), activation='relu'),
-    Dropout(0.5),
-    Dense(64, activation='relu'),
-    Dropout(0.5),
-    Dense(len(labels), activation='softmax')
+# Convert sentences to vectors, handling missing words
+X_train = np.array([
+    np.mean([word2vec_model.wv[word] for word in sentence if word in word2vec_model.wv], axis=0)
+    if any(word in word2vec_model.wv for word in sentence) else np.zeros(300)  # Handle empty cases
+    for sentence in sentences
 ])
 
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.01), metrics=['accuracy'])
+# Encode labels
+label_encoder = LabelEncoder()
+y_train = label_encoder.fit_transform(labels)
 
-# Train model
-model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
-model.save("chatbot_model.h5")
+# Build a better neural network model
+model = Sequential([
+    Dense(128, input_shape=(300,), activation="relu"),
+    Dropout(0.3),
+    Dense(64, activation="relu"),
+    Dropout(0.3),
+    Dense(len(classes), activation="softmax")
+])
 
-print("✅ Chatbot model trained and saved!")
+model.compile(loss="sparse_categorical_crossentropy", optimizer=Adam(learning_rate=0.001), metrics=["accuracy"])
+model.fit(X_train, y_train, epochs=150, batch_size=8)  # Increased epochs for better accuracy
+
+# Save models
+model.save("chatbot_model.keras")
+np.save("label_classes.npy", classes)
+print("✅ Model trained and saved successfully!")

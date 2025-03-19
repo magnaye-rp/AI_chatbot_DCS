@@ -1,47 +1,50 @@
 import json
-import random
 import numpy as np
-import pickle
-import tensorflow as tf
+import gensim
 from tensorflow.keras.models import load_model
+from sklearn.preprocessing import LabelEncoder
+from spellchecker import SpellChecker
+from nltk.tokenize import word_tokenize
 
-# Load data
-words = pickle.load(open("words.pkl", "rb"))
-labels = pickle.load(open("labels.pkl", "rb"))
-model = load_model("chatbot_model.h5")
+model = load_model("chatbot_model.keras")
+word2vec_model = gensim.models.Word2Vec.load("word2vec.model")
+spell = SpellChecker()
 
-# Load intents
-with open('training_data.json', 'r') as file:
-    intents = json.load(file)
+# Load training_data
+with open("training_data.json", "r") as file:
+    data = json.load(file)
 
-# Process user input
-def preprocess_input(text):
-    tokens = text.lower().split()
-    bag = [1 if w in tokens else 0 for w in words]
-    return np.array([bag])
+classes = [intent["tag"] for intent in data["intents"]]
 
-# Get response
-def get_response(tag):
-    for intent in intents["intents"]:
+def predict_intent(sentence):
+    words = sentence.split()
+    word_vectors = [word2vec_model.wv[word] for word in words if word in word2vec_model.wv]
+
+    if not word_vectors:
+        return "I'm not sure how to respond to that. Can you rephrase?"
+
+    sentence_vector = np.mean(word_vectors, axis=0)
+    sentence_vector = np.expand_dims(sentence_vector, axis=0)
+    prediction = model.predict(sentence_vector)[0]
+    tag = classes[np.argmax(prediction)]
+
+    for intent in data["intents"]:
         if intent["tag"] == tag:
-            return random.choice(intent["responses"])
+            return np.random.choice(intent["responses"])
+
     return "Sorry, I didn't understand that."
 
-# Predict class
-def predict_class(text):
-    bow = preprocess_input(text)
-    res = model.predict(bow)[0]
-    confidence_threshold = 0.25
-    results = [[i, r] for i, r in enumerate(res) if r > confidence_threshold]
-    results.sort(key=lambda x: x[1], reverse=True)
-    return labels[results[0][0]] if results else "unknown"
+def preprocess_user_input(user_input):
+    words = word_tokenize(user_input.lower())
+    corrected_words = [spell.correction(word) if word in spell.unknown(words) else word for word in words]
+    return " ".join(corrected_words)
 
-# Chat loop
-print("🤖 Chatbot is ready! Type 'exit' to quit.")
+
+print("🤖 Chatbot is ready! Type 'quit' to exit.")
 while True:
-    user_input = input("You: ")
-    if user_input.lower() == "exit":
+    user_input = input("You: ").strip().lower()
+    if user_input.lower() == "quit":
         break
-    tag = predict_class(user_input)
-    response = get_response(tag)
-    print("Dental Bot:", response)
+    corrected_input = preprocess_user_input(user_input)
+    response = predict_intent(user_input)
+    print("Bot:", response)
