@@ -1,50 +1,60 @@
 import json
 import numpy as np
 import gensim
+import tensorflow as tf
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
-from spellchecker import SpellChecker
 from nltk.tokenize import word_tokenize
 
-model = load_model("chatbot_model.keras")
+# Load Pretrained Model
+model = load_model("chatbot_model.h5")
 word2vec_model = gensim.models.Word2Vec.load("word2vec.model")
-spell = SpellChecker()
 
-# Load training_data
+# Load Tokenizer
+with open("tokenizer.json", "r") as file:
+    word_index = json.load(file)
+
+# Load Label Encoder
+label_encoder = LabelEncoder()
+label_encoder.classes_ = np.load("label_encoder.npy", allow_pickle=True)
+
+# Load Training Data
 with open("training_data.json", "r") as file:
     data = json.load(file)
 
-classes = [intent["tag"] for intent in data["intents"]]
+responses = {intent["tag"]: intent["responses"] for intent in data["intents"]}
 
-def predict_intent(sentence):
-    words = sentence.split()
+# Preprocess user input
+def preprocess_input(user_input):
+    """Tokenize and vectorize user input."""
+    words = word_tokenize(user_input.lower())
     word_vectors = [word2vec_model.wv[word] for word in words if word in word2vec_model.wv]
 
     if not word_vectors:
-        return "I'm not sure how to respond to that. Can you rephrase?"
+        return None  # If no words are found in Word2Vec, return None
 
     sentence_vector = np.mean(word_vectors, axis=0)
-    sentence_vector = np.expand_dims(sentence_vector, axis=0)
-    prediction = model.predict(sentence_vector)[0]
-    tag = classes[np.argmax(prediction)]
+    return np.expand_dims(sentence_vector, axis=0)
 
-    for intent in data["intents"]:
-        if intent["tag"] == tag:
-            return np.random.choice(intent["responses"])
+# Predict intent
+def predict_intent(user_input):
+    """Predict the intent of user input using the trained model."""
+    sequence = [[word_index.get(word, 0) for word in word_tokenize(user_input.lower())]]  # Convert words to indexes
+    padded_sequence = pad_sequences(sequence, maxlen=model.input_shape[1], padding="post")  # Match input size
 
-    return "Sorry, I didn't understand that."
+    prediction = model.predict(padded_sequence)[0]
+    tag = label_encoder.inverse_transform([np.argmax(prediction)])[0]
 
-def preprocess_user_input(user_input):
-    words = word_tokenize(user_input.lower())
-    corrected_words = [spell.correction(word) if word in spell.unknown(words) else word for word in words]
-    return " ".join(corrected_words)
+    return np.random.choice(responses[tag])
 
-
+# Start Chatbot Interaction
 print("🤖 Chatbot is ready! Type 'quit' to exit.")
 while True:
-    user_input = input("You: ").strip().lower()
+    user_input = input("You: ").strip()
     if user_input.lower() == "quit":
+        print("Bot: Goodbye! 👋")
         break
-    corrected_input = preprocess_user_input(user_input)
+
     response = predict_intent(user_input)
     print("Bot:", response)

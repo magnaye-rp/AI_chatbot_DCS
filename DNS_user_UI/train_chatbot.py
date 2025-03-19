@@ -1,62 +1,85 @@
 import json
 import numpy as np
 import gensim
-from gensim.models import Word2Vec
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import Adam
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.layers import Embedding, Bidirectional, LSTM, Dense, Attention, Input
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
-from nltk.tokenize import word_tokenize
+import pickle
 
-import nltk
-nltk.download('punkt')
-
-# Load training data
-with open("training_data.json", "r") as file:
+# Load intents JSON
+with open("training_data.json") as file:
     data = json.load(file)
 
-# Prepare training data
-sentences = []
+# Extract training data
+patterns = []
 labels = []
-classes = set()
+responses = {}  # Store responses for each tag
 
 for intent in data["intents"]:
     for pattern in intent["patterns"]:
-        tokenized_sentence = word_tokenize(pattern.lower())  # Lowercasing & tokenization
-        sentences.append(tokenized_sentence)
+        patterns.append(pattern.lower())  # Normalize text
         labels.append(intent["tag"])
-        classes.add(intent["tag"])
+    responses[intent["tag"]] = intent["responses"]
 
-classes = sorted(classes)  # Keep label order consistent
-
-# Train Word2Vec model with more efficient parameters
-word2vec_model = Word2Vec(sentences, vector_size=300, window=5, min_count=1, workers=4, epochs=20)
-word2vec_model.save("word2vec.model")
-
-# Convert sentences to vectors, handling missing words
-X_train = np.array([
-    np.mean([word2vec_model.wv[word] for word in sentence if word in word2vec_model.wv], axis=0)
-    if any(word in word2vec_model.wv for word in sentence) else np.zeros(300)  # Handle empty cases
-    for sentence in sentences
-])
-
-# Encode labels
+# Encode labels numerically
 label_encoder = LabelEncoder()
-y_train = label_encoder.fit_transform(labels)
+labels_encoded = label_encoder.fit_transform(labels)
 
-# Build a better neural network model
-model = Sequential([
-    Dense(128, input_shape=(300,), activation="relu"),
-    Dropout(0.3),
-    Dense(64, activation="relu"),
-    Dropout(0.3),
-    Dense(len(classes), activation="softmax")
-])
+# Save Label Encoder for chatbot.py
+np.save("label_encoder.npy", label_encoder.classes_)
 
-model.compile(loss="sparse_categorical_crossentropy", optimizer=Adam(learning_rate=0.001), metrics=["accuracy"])
-model.fit(X_train, y_train, epochs=150, batch_size=8)  # Increased epochs for better accuracy
+# Tokenize patterns
+tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
+tokenizer.fit_on_texts(patterns)
+sequences = tokenizer.texts_to_sequences(patterns)
+padded_sequences = pad_sequences(sequences, padding="post")
 
-# Save models
-model.save("chatbot_model.keras")
-np.save("label_classes.npy", classes)
-print("✅ Model trained and saved successfully!")
+# Save Tokenizer for chatbot.py
+with open("tokenizer.json", "w") as file:
+    json.dump(tokenizer.word_index, file)
+
+# Load Word2Vec Model
+word2vec_model = gensim.models.Word2Vec.load("word2vec.model")
+
+# Create embedding matrix
+vocab_size = len(tokenizer.word_index) + 1
+embedding_dim = word2vec_model.vector_size
+embedding_matrix = np.zeros((vocab_size, embedding_dim))
+
+for word, i in tokenizer.word_index.items():
+    if word in word2vec_model.wv:
+        embedding_matrix[i] = word2vec_model.wv[word]
+
+# Build the Model with BiLSTM + Attention
+input_layer = Input(shape=(padded_sequences.shape[1],))
+
+embedding_layer = Embedding(
+    vocab_size,
+    embedding_dim,
+    weights=[embedding_matrix],
+    input_length=padded_sequences.shape[1],
+    trainable=False,
+)(input_layer)
+
+bilstm = Bidirectional(LSTM(128, return_sequences=True))(embedding_layer)
+
+query = Dense(128)(bilstm)
+value = Dense(128)(bilstm)
+attention = Attention()([query, value])  # Corrected Attention usage
+
+lstm_output = LSTM(64)(attention)
+output_layer = Dense(len(set(labels)), activation="softmax")(lstm_output)
+
+model = keras.Model(inputs=input_layer, outputs=output_layer)
+
+# Compile Model
+model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+# Train the model
+model.fit(padded_sequences, np.array(labels_encoded), epochs=500, batch_size=8, verbose=1)
+
+# Save the model
+model.save("chatbot_model.h5")
