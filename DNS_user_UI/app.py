@@ -1,6 +1,9 @@
 import customtkinter as ctk
 from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkImage
+from chatbot import Chatbot
 from PIL import Image
+import sys
+print("PYTHON EXECUTABLE:", sys.executable)
 
 class App(ctk.CTk):
     def __init__(self):
@@ -14,6 +17,7 @@ class App(ctk.CTk):
         self.title_label = CTkLabel(self.title_frame, text="MAGNAYE DENTAL CARE & ORTHODONTICS",
                                     text_color="white", font=("Helvetica Neue", 45, "bold"))
         self.title_label.pack(pady=15)
+
 
         # Sidebar (Navigation)
         self.side_frame = CTkFrame(self, width=250, height=980, fg_color="#1A1E23")
@@ -45,6 +49,9 @@ class App(ctk.CTk):
         self.btn_pricing.pack(fill="x", pady=10, padx=10)
 
     def create_profile_section(self):
+        btn_chatbot = CTkButton(self.side_frame, text="Chat Now", font=("Arial", 18, "bold"),
+                                fg_color="#30475E", command=self.open_chatbot)
+        btn_chatbot.pack(fill="x", pady=10, padx=10)
         """Creates a profile info section at the bottom of the sidebar."""
         self.profile_frame = CTkFrame(self.side_frame, fg_color="#1A1E23")
         self.profile_frame.pack(side="bottom", fill="x", pady=20, padx=10)
@@ -132,6 +139,12 @@ class App(ctk.CTk):
         for option in options:
             lbl = CTkLabel(self.content_frame, text=option, font=("Arial", 20), text_color="white")
             lbl.pack(pady=5)
+
+    def open_chatbot(self):
+        chatbot_window = Chatbot()
+        chatbot_window.mainloop()
+
+
 
 if __name__ == "__main__":
     app = App()
