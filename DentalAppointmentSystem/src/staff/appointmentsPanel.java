@@ -107,7 +107,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
     }
     
     void loadAppoinmentsTable() {
-        String query = "CALL getAppoinments(?)";
+        String query = "CALL getAppointments(?)";
 
         try (Connection conn = Database.getConnection();
              CallableStatement appoint = conn.prepareCall(query)) {
@@ -121,7 +121,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 String fullName = rs.getString("full_name");
                 String serviceName = rs.getString("service_name");
-                Date dateDone = rs.getDate("appointment_date");
+                Timestamp dateDone = rs.getTimestamp("appointment_date");
 
                 model.addRow(new Object[]{fullName, serviceName, dateDone});
             }

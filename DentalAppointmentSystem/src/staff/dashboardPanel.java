@@ -38,27 +38,42 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         chart.addLegend("Daily Services Done", new Color(245, 189, 135));
 
         String dailyServicesQuery = "SELECT YEARWEEK(date_done) AS week, DAYNAME(date_done) AS day, COUNT(patient_id) AS daily_count " +
-                                    "FROM services_done WHERE dentist_id = ? " +
-                                    "GROUP BY YEARWEEK(date_done), DAYOFWEEK(date_done) " +
-                                    "ORDER BY YEARWEEK(date_done), DAYOFWEEK(date_done)";
+    "FROM services_done WHERE dentist_id = ? AND YEARWEEK(date_done) = YEARWEEK(CURDATE()) " +
+    "GROUP BY YEARWEEK(date_done), DAYOFWEEK(date_done) " +
+    "ORDER BY YEARWEEK(date_done), DAYOFWEEK(date_done)";
+
 
         String nextAppointmentQuery = "SELECT a.appointment_date, p.full_name AS patient_name, s.service_name " +
-                                      "FROM appointment a " +
-                                      "JOIN patient p ON a.patient_id = p.patient_id " +
-                                      "JOIN service s ON a.service_id = s.service_id " +
-                                      "WHERE a.dentist_id = ? AND a.status = 'Pending' " +
-                                      "and appointment_date = CURDATE() " +
-                                      "ORDER BY a.appointment_date ASC LIMIT 1";
+                              "FROM appointment a " +
+                              "JOIN patient p ON a.patient_id = p.patient_id " +
+                              "JOIN service s ON a.service_id = s.service_id " +
+                              "WHERE a.dentist_id = ? " +
+                              "AND a.status = 'Pending' " +
+                              "AND DATE(a.appointment_date) = CURDATE() " + 
+                              "ORDER BY a.appointment_date DESC " +
+                              "LIMIT 1";
+
 
         String earningsQuery = "SELECT SUM(s.service_cost) AS total " +
                                "FROM services_done sd " +
                                "JOIN service s ON s.service_id = sd.service_id " +
                                "WHERE sd.dentist_id = ?";
+        
+        String mostFreq = "SELECT p.patient_id, p.full_name, COUNT(a.appointment_id) AS appointment_count " +
+               "FROM appointment a " +
+               "INNER JOIN patient p ON a.patient_id = p.patient_id " +
+               "WHERE a.dentist_id = ? " +
+               "AND a.appointment_date BETWEEN CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY " +
+               "AND CURDATE() + INTERVAL (6 - WEEKDAY(CURDATE())) DAY " +
+               "GROUP BY p.patient_id " +
+               "ORDER BY appointment_count DESC " +
+               "LIMIT 1";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement dailyStmt = conn.prepareStatement(dailyServicesQuery);
              PreparedStatement nextStmt = conn.prepareStatement(nextAppointmentQuery);
-             PreparedStatement earningsStmt = conn.prepareStatement(earningsQuery)) {
+             PreparedStatement earningsStmt = conn.prepareStatement(earningsQuery);
+             PreparedStatement freq = conn.prepareStatement(mostFreq)) {
 
             dailyStmt.setInt(1, dent_id);
             ResultSet rs = dailyStmt.executeQuery();
@@ -99,6 +114,12 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
                 earnings_field.setText(formattedEarnings);
             } else {
                 earnings_field.setText("Php 0.00");
+            }
+            
+            freq.setInt(1, dent_id);
+            ResultSet freqrs = freq.executeQuery();
+            if(freqrs.next()){
+                //most frequent
             }
 
         } catch (SQLException e) {

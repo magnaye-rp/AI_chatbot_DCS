@@ -4,14 +4,18 @@ import java.sql.*;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
-public class dentistUI extends javax.swing.JFrame {
+public final class dentistUI extends javax.swing.JFrame {
     int dent_id;
+    int apptmt_id = -1;
     public dentistUI(int dent_id) {
         this.dent_id = dent_id;
         initComponents();
         getDentits();
+        setStatus();
     }
+    
     public void getDentits() {
         String query = "CALL getDentistName(?)";
 
@@ -29,7 +33,48 @@ public class dentistUI extends javax.swing.JFrame {
             Logger.getLogger(dentistUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void setStatus(){
+        String query = "CALL getStatus(?)";
 
+        try (Connection conn = Database.getConnection();
+             CallableStatement stati = conn.prepareCall(query)) {
+
+            stati.setInt(1, dent_id);
+            ResultSet rs = stati.executeQuery();
+
+            if (rs.next()) {
+                String status = rs.getString("status");
+                apptmt_id = rs.getInt("appointment_id");
+
+                switch (status) {
+                    case "In Progress":
+                        activity.setText("Job In Progress");
+                        job_done.setVisible(true);
+                        break;
+                    case "No Show":
+                        activity.setText("No Show - On Standby");
+                        job_done.setVisible(false);
+                        break;
+                    case "Pending":
+                        activity.setText("Waiting for Next Patient");
+                        job_done.setVisible(false);
+                        break;
+                    default:
+                        // Handle unexpected statuses, maybe log for debugging
+                        activity.setText("Unknown Status");
+                        job_done.setVisible(false);
+                        break;
+                }
+            } else {
+                activity.setText("On Standby");
+                job_done.setVisible(false);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(dentistUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -57,7 +102,7 @@ public class dentistUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         activity = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        job_done = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dental Clinic System");
@@ -270,19 +315,29 @@ public class dentistUI extends javax.swing.JFrame {
                 .addContainerGap(9, Short.MAX_VALUE))
         );
 
-        activity.setFont(new java.awt.Font("Helvetica Neue", 0, 30)); // NOI18N
+        activity.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         activity.setForeground(new java.awt.Color(255, 255, 255));
         activity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         activity.setText("PLACEHOLDER");
 
-        jLabel10.setFont(new java.awt.Font("Helvetica Neue", 0, 26)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("CURRENT ACTIVITY:");
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
-        jButton1.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 173, 181));
-        jButton1.setText("JOB DONE");
+        job_done.setBackground(new java.awt.Color(0, 0, 0));
+        job_done.setFont(new java.awt.Font(".AppleSystemUIFont", 1, 22)); // NOI18N
+        job_done.setForeground(new java.awt.Color(0, 173, 181));
+        job_done.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/check.png"))); // NOI18N
+        job_done.setText("JOB DONE");
+        job_done.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        job_done.setBorderPainted(false);
+        job_done.setFocusPainted(false);
+        job_done.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                job_doneActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -295,29 +350,28 @@ public class dentistUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(infoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(infoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ptntButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(pymtButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(apntButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dashButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ptntButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pymtButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(apntButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dashButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(activity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(71, 71, 71)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                            .addComponent(activity, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                            .addComponent(job_done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(30, 30, 30)))
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(displayPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(53, 53, 53)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(1606, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,21 +389,18 @@ public class dentistUI extends javax.swing.JFrame {
                         .addComponent(ptntButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(45, 45, 45)
                         .addComponent(pymtButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 251, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(activity)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(job_done)
+                        .addGap(49, 49, 49)
                         .addComponent(infoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(displayPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                    .addContainerGap(699, Short.MAX_VALUE)
-                    .addComponent(jLabel10)
-                    .addGap(263, 263, 263)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -432,6 +483,20 @@ public class dentistUI extends javax.swing.JFrame {
         displayPanel.add(pymtPanel).setVisible(true);
     }//GEN-LAST:event_pymtButtonMouseClicked
 
+    private void job_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_job_doneActionPerformed
+        try (Connection conn = Database.getConnection();
+             CallableStatement call = conn.prepareCall("CALL jobComplete(?)")) {
+
+            call.setInt(1, apptmt_id);
+            ResultSet rs = call.executeQuery();
+            JOptionPane.showMessageDialog(rootPane, "Job Complete for Appointment No. " + apptmt_id, "Job Done", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(dentistUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        setStatus();
+    }//GEN-LAST:event_job_doneActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -439,7 +504,7 @@ public class dentistUI extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new dentistUI(1).setVisible(true);
+                new dentistUI(4).setVisible(true);
             }
         });
     }
@@ -450,7 +515,6 @@ public class dentistUI extends javax.swing.JFrame {
     private javax.swing.JPanel dashButton;
     private javax.swing.JPanel displayPanel;
     private javax.swing.JPanel infoPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -466,6 +530,7 @@ public class dentistUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JButton job_done;
     private javax.swing.JPanel ptntButton;
     private javax.swing.JPanel pymtButton;
     // End of variables declaration//GEN-END:variables
