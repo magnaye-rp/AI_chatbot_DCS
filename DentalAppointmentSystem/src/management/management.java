@@ -274,7 +274,7 @@ public class management extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("HISTORY");
+        jLabel7.setText("MANAGE CLINIC");
         jLabel7.setFocusable(false);
 
         javax.swing.GroupLayout settingsLayout = new javax.swing.GroupLayout(settings);

@@ -155,7 +155,11 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         jLabel1.setText("APPOINTMENTS");
 
         plannerPanel.setAutoscrolls(true);
-        plannerPanel.setLayout(new java.awt.BorderLayout());
+        plannerPanel.setFocusTraversalKeysEnabled(false);
+        plannerPanel.setFocusable(false);
+        plannerPanel.setRequestFocusEnabled(false);
+        plannerPanel.setVerifyInputWhenFocusTarget(false);
+        plannerPanel.setLayout(null);
         plannerPanel.add(calendar, BorderLayout.CENTER);
 
         appointments_table.setBackground(new java.awt.Color(57, 62, 70));
