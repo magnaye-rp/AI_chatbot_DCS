@@ -17,23 +17,47 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.sql.*;
 
-
-
 public final class appointmentsPanel extends javax.swing.JInternalFrame {
     
     private com.mindfusion.scheduling.Calendar calendar;
     int dent_id;
     public appointmentsPanel(int dent_id) {
         this.dent_id = dent_id;
-        calendar = new Calendar();
-        calendar.setTheme(ThemeType.Dark);
-        calendar.setCurrentView(CalendarView.Timetable);
-        calendar.getTimetableSettings().setStartTime(7 * 60);
-        calendar.getTimetableSettings().setEndTime(17 * 60);
+        setupCalendar();
         initComponents();
         loadAppointments(this.dent_id);
         loadAppoinmentsTable();
-    } 
+    }
+    
+    public void setupCalendar() {
+        calendar = new Calendar();
+        calendar.setCurrentView(CalendarView.Timetable);
+        calendar.setTheme(ThemeType.Dark);
+
+        TimetableSettings settings = calendar.getTimetableSettings();
+
+        settings.setStartTime(7 * 60);
+        settings.setEndTime(17 * 60);
+        settings.setAllowReorderResources(false);
+        settings.setTimelineSize(100);
+        settings.setTwelveHourFormat(true);
+        settings.setCellSize(28);
+        settings.setMinColumnSize(30);
+        settings.setColumnBandSize(0);
+        settings.setShowCurrentTime(true);
+        settings.setInfoHeaderSize(10);
+        settings.setShowAM(true);
+        settings.setHourFormat("hh:mm");
+
+        calendar.setAllowInplaceEdit(false);
+        calendar.setAllowDrag(false);
+        calendar.setStartEditAfterModify(false);
+        calendar.setAllowInplaceCreate(false);
+        calendar.setFocusable(false);
+        calendar.setEnableDragCreate(false);
+        calendar.setEnabled(false);  
+        calendar.repaint();
+    }
     
     public void loadAppointments(int dentistId) {
 
@@ -91,7 +115,6 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Error loading appointments: " + e.getMessage());
         }
 
-        // Make sure to update the panel's layout properly after loading appointments
         plannerPanel.setPreferredSize(new Dimension(836, 679));
         plannerPanel.setSize(836, 679);
         plannerPanel.setLayout(new BorderLayout());
