@@ -9,6 +9,14 @@ import java.util.concurrent.Executors;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javaswingdev.chart.ModelPieChart;
+import javaswingdev.chart.PieChart;
 
 
 public class dashboardPanel extends javax.swing.JInternalFrame {
@@ -17,8 +25,17 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
     public dashboardPanel(int dent_id) {
         this.dent_id = dent_id;
         initComponents();
+        jLabel4.setText("<html>"
+    + "🟦 MON<br><br>"
+    + "🟥 TUE<br><br>"
+    + "🟧 WED<br><br>"
+    + "🟨 THU<br><br>"
+    + "🟩 FRI<br><br>"
+    + "🟪 SAT"
+    + "</html>");
+
         loadChart();
-    
+        revenue_pie_chart();
     } 
     
 
@@ -35,6 +52,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
     }
 
     public void loadChart() {
+        
         chart.addLegend("Daily Services Done", new Color(245, 189, 135));
 
         String dailyServicesQuery = "SELECT YEARWEEK(date_done) AS week, DAYNAME(date_done) AS day, COUNT(patient_id) AS daily_count " +
@@ -91,13 +109,9 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
                 String patientName = nextRs.getString("patient_name");
                 String serviceName = nextRs.getString("service_name");
                 String date = nextRs.getString("appointment_date");
-                next_patient.setText(patientName);
-                next_service.setText(serviceName);
-                service_date.setText(date);
+                next_patient.setText(patientName + " " + serviceName);
             } else {
-                next_patient.setText("No Upcoming");
-                next_service.setText("Appointments Yet");
-                service_date.setText(LocalDate.now().toString());
+                next_patient.setText("NO UPCOMING APPOINTMENTS YET");
             }
 
             earningsStmt.setInt(1, dent_id);
@@ -110,7 +124,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
                 }
 
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
-                String formattedEarnings = currencyFormat.format(totalEarnings).replace("₱", "Php ");
+                String formattedEarnings = currencyFormat.format(totalEarnings).replace("₱", "PHP ");
                 earnings_field.setText(formattedEarnings);
             } else {
                 earnings_field.setText("Php 0.00");
@@ -127,8 +141,91 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         }
     }
 
+    final void revenue_pie_chart() {
+        List<revenueData> dailyRevData = fetchRevenue();
+        Map<String, Float> dayRevenue = new HashMap<>();
 
+        for (revenueData day : dailyRevData) {
+            String weekDay = day.getWeek_day();
+            float revenue = day.getRevenue();
+            float current = dayRevenue.getOrDefault(weekDay, 0f);
+            dayRevenue.put(weekDay, current + revenue);
+        }
 
+        for (Map.Entry<String, Float> entry : dayRevenue.entrySet()) {
+            String week_day = entry.getKey();
+            float rev = entry.getValue();
+            Color color;
+
+            switch (week_day) {
+                case "Monday":
+                    color = new Color(23, 126, 238); // Blue
+                    break;
+                case "Tuesday":
+                    color = new Color(221, 65, 65); // Red
+                    break;
+                case "Wednesday":
+                    color = new Color(255, 140, 0); // Orange
+                    break;
+                case "Thursday":
+                    color = Color.YELLOW;
+                    break;
+                case "Friday":
+                    color = new Color(47, 157, 64); // Green
+                    break;
+                case "Saturday":
+                    color = new Color(128, 0, 128); // Purple
+                    break;
+                default:
+                    color = new Color(196, 151, 58); // Default color for unexpected input
+                    break;
+            }
+
+            revenue_pie_chart.addData(new ModelPieChart(week_day, rev, color));
+        }
+
+        revenue_pie_chart.setChartType(PieChart.PeiChartType.DONUT_CHART);
+    }
+
+    private List<revenueData> fetchRevenue(){
+        List<revenueData> dailyRevData = new ArrayList<>();
+        String sql = "CALL getDayRev(?)";
+
+        try (Connection conn = Database.getConnection();
+            CallableStatement call = conn.prepareCall(sql))
+            {
+                call.setInt(1, dent_id);
+                ResultSet rs = call.executeQuery();
+                while (rs.next()) {
+                    String day = rs.getString("day_of_week");
+                    float rev = rs.getFloat("sum");
+                    dailyRevData.add(new revenueData(day,rev));
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(dashboardPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return dailyRevData;
+    }
+
+    class revenueData {
+        private String week_day;
+        private float revenue;
+
+        public revenueData(String week_day, float revenue) {
+            this.week_day = week_day;
+            this.revenue = revenue;
+            
+        }
+
+        public String getWeek_day() {
+            return week_day;
+        }
+
+        public float getRevenue() {
+            return revenue;
+        }
+    }
 
     
     @SuppressWarnings("unchecked")
@@ -141,10 +238,11 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         next_patient = new javax.swing.JLabel();
-        next_service = new javax.swing.JLabel();
         earnings_field = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        service_date = new javax.swing.JLabel();
+        revenue_pie_chart = new javaswingdev.chart.PieChart();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(34, 40, 49));
         setBorder(null);
@@ -156,44 +254,43 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         chart.setBackground(new java.awt.Color(34, 40, 49));
         chart.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("WEEKLY CLINIC REPORT");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("TOTAL SERVICES DONE");
 
-        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("YOUR NEXT APPOINTMENT: ");
 
-        next_patient.setFont(new java.awt.Font("Helvetica Neue", 0, 34)); // NOI18N
+        next_patient.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         next_patient.setForeground(new java.awt.Color(255, 255, 255));
         next_patient.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         next_patient.setText("YOUR NEXT APPOINTMENT: ");
 
-        next_service.setFont(new java.awt.Font("Helvetica Neue", 0, 34)); // NOI18N
-        next_service.setForeground(new java.awt.Color(255, 255, 255));
-        next_service.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        next_service.setText("YOUR NEXT APPOINTMENT: ");
-
-        earnings_field.setFont(new java.awt.Font("Helvetica Neue", 0, 48)); // NOI18N
+        earnings_field.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         earnings_field.setForeground(new java.awt.Color(255, 255, 255));
         earnings_field.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         earnings_field.setText("MONEY");
 
-        jLabel5.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("TOTAL REVENUE THIS WEEK:");
 
-        service_date.setFont(new java.awt.Font("Helvetica Neue", 0, 34)); // NOI18N
-        service_date.setForeground(new java.awt.Color(255, 255, 255));
-        service_date.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        service_date.setText("YOUR NEXT APPOINTMENT: ");
+        revenue_pie_chart.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("<html>MON<br>TUE<br>WED<br>THU<br>FRI<br>SAT</html>");
+
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Day of Week Distribution");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -206,51 +303,59 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1276, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(55, 55, 55)
-                                .addComponent(earnings_field, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(168, 168, 168)
+                                        .addComponent(earnings_field, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(41, 41, 41)
+                                        .addComponent(revenue_pie_chart, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel4))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(104, 104, 104)
+                                        .addComponent(jLabel5))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(196, 196, 196)
+                                        .addComponent(jLabel6))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(385, 385, 385)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(next_patient, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(next_service, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(service_date, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(next_patient, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(238, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(724, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(250, 250, 250)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(earnings_field, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(next_patient)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(next_service)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(service_date)
-                .addContainerGap(152, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(87, 87, 87)
-                    .addComponent(jLabel5)
-                    .addContainerGap(791, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(earnings_field)
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(revenue_pie_chart, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(next_patient))
+                .addContainerGap(224, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1520, -1));
@@ -265,10 +370,11 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel next_patient;
-    private javax.swing.JLabel next_service;
-    private javax.swing.JLabel service_date;
+    private javaswingdev.chart.PieChart revenue_pie_chart;
     // End of variables declaration//GEN-END:variables
 }

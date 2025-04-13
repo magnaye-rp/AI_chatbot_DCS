@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class appointmentsPanel extends javax.swing.JInternalFrame {
     
@@ -27,6 +29,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         initComponents();
         loadAppointments(this.dent_id);
         loadAppoinmentsTable();
+        appointmentRate();
     }
     
     public void setupCalendar() {
@@ -153,6 +156,26 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         }
     }
 
+    void appointmentRate(){
+        appointment_turnout.setChartTitle("This Week's Appointment Status");
+        appointment_turnout.setAxisLabels("Date", "Rate");
+        String call = "CALL getAppRatio(?)";
+        try(Connection conn = Database.getConnection();
+            CallableStatement callstmt = conn.prepareCall(call)){
+            callstmt.setInt(1, dent_id);
+            ResultSet rs = callstmt.executeQuery();
+            
+            while(rs.next()){
+                String date = rs.getString("date");        
+                String status = rs.getString("status");    
+                int value = rs.getInt("value");            
+
+                appointment_turnout.addData(status, date, value);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(appointmentsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -163,6 +186,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         appointments_table = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        appointment_turnout = new beans.LineChartBean();
 
         setBackground(new java.awt.Color(34, 40, 49));
         setBorder(null);
@@ -172,7 +196,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         jPanel1.setBackground(new java.awt.Color(34, 40, 49));
         jPanel1.setSize(new java.awt.Dimension(1288, 796));
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("APPOINTMENTS");
@@ -222,10 +246,10 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
             appointments_table.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("ALL UPCOMING APPOINTMENTS");
+        jLabel2.setText("All Upcoming Appointments");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -237,24 +261,28 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(plannerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(plannerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 668, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 668, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(appointment_turnout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 668, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(plannerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(appointment_turnout, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(60, Short.MAX_VALUE))
         );
 
@@ -265,6 +293,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private beans.LineChartBean appointment_turnout;
     private javax.swing.JTable appointments_table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
