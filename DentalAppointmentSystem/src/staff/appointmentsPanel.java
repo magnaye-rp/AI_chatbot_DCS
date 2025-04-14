@@ -156,26 +156,45 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         }
     }
 
-    void appointmentRate(){
+    void appointmentRate() {
         appointment_turnout.setChartTitle("This Week's Appointment Status");
         appointment_turnout.setAxisLabels("Date", "Rate");
+        appointment_turnout.clearData();
+        appointment_turnout.setEnabled(false);
+
+
         String call = "CALL getAppRatio(?)";
-        try(Connection conn = Database.getConnection();
-            CallableStatement callstmt = conn.prepareCall(call)){
+
+        try (Connection conn = Database.getConnection();
+             CallableStatement callstmt = conn.prepareCall(call)) {
+
             callstmt.setInt(1, dent_id);
             ResultSet rs = callstmt.executeQuery();
-            
-            while(rs.next()){
-                String date = rs.getString("date");        
-                String status = rs.getString("status");    
-                int value = rs.getInt("value");            
+
+            int completedIndex = -1;
+            int missedIndex = -1;
+
+            while (rs.next()) {
+                String date = rs.getString("date");
+                String status = rs.getString("status");
+                int value = rs.getInt("value");
 
                 appointment_turnout.addData(status, date, value);
+
+                if (status.equals("Completed") && completedIndex == -1) {
+                    completedIndex = 0;
+                    appointment_turnout.setSeriesColor(completedIndex, new Color(0, 200, 83)); // Greenish
+                } else if (status.equals("Missed") && missedIndex == -1) {
+                    missedIndex = 1;
+                    appointment_turnout.setSeriesColor(missedIndex, new Color(229, 57, 53)); // Reddish
+                }
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(appointmentsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -251,6 +270,8 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("All Upcoming Appointments");
 
+        appointment_turnout.setForeground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -272,9 +293,8 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(plannerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()

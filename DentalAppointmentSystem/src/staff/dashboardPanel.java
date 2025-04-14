@@ -38,7 +38,6 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         revenue_pie_chart();
     } 
     
-
     public void startAutoRefresh() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -75,7 +74,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         String earningsQuery = "SELECT SUM(s.service_cost) AS total " +
                                "FROM services_done sd " +
                                "JOIN service s ON s.service_id = sd.service_id " +
-                               "WHERE sd.dentist_id = ?";
+                               "WHERE sd.dentist_id = ? AND YEARWEEK(date_done) = YEARWEEK(CURDATE());";
         
         String mostFreq = "SELECT p.patient_id, p.full_name, COUNT(a.appointment_id) AS appointment_count " +
                "FROM appointment a " +
@@ -90,8 +89,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         try (Connection conn = Database.getConnection();
              PreparedStatement dailyStmt = conn.prepareStatement(dailyServicesQuery);
              PreparedStatement nextStmt = conn.prepareStatement(nextAppointmentQuery);
-             PreparedStatement earningsStmt = conn.prepareStatement(earningsQuery);
-             PreparedStatement freq = conn.prepareStatement(mostFreq)) {
+             PreparedStatement earningsStmt = conn.prepareStatement(earningsQuery)) {
 
             dailyStmt.setInt(1, dent_id);
             ResultSet rs = dailyStmt.executeQuery();
@@ -129,12 +127,6 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
             } else {
                 earnings_field.setText("Php 0.00");
             }
-            
-            freq.setInt(1, dent_id);
-            ResultSet freqrs = freq.executeQuery();
-            if(freqrs.next()){
-                //most frequent
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,25 +151,25 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
 
             switch (week_day) {
                 case "Monday":
-                    color = new Color(23, 126, 238); // Blue
+                    color = new Color(0, 0, 255); // BLUE
                     break;
                 case "Tuesday":
-                    color = new Color(221, 65, 65); // Red
+                    color = new Color(255, 0, 0); // RED
                     break;
                 case "Wednesday":
-                    color = new Color(255, 140, 0); // Orange
+                    color = new Color(255, 165, 0); // ORANGE
                     break;
                 case "Thursday":
-                    color = Color.YELLOW;
+                    color = new Color(255, 255, 0); // YELLOW
                     break;
                 case "Friday":
-                    color = new Color(47, 157, 64); // Green
+                    color = new Color(0, 128, 0); // GREEN
                     break;
                 case "Saturday":
-                    color = new Color(128, 0, 128); // Purple
+                    color = new Color(128, 0, 128); // PURPLE
                     break;
                 default:
-                    color = new Color(196, 151, 58); // Default color for unexpected input
+                    color = new Color(128, 128, 128); // GRAY
                     break;
             }
 

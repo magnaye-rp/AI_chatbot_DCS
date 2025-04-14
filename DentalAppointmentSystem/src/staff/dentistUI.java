@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
+import java.time.LocalTime;
 
 public final class dentistUI extends javax.swing.JFrame {
     int dent_id;
@@ -20,10 +21,10 @@ public final class dentistUI extends javax.swing.JFrame {
         initComponents();
         getDentits();
         setStatus();
-        startAutoRefresh();
+        autoTime();
     }
     
-    public void startAutoRefresh() {
+    public void autoTime() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             try {
@@ -57,7 +58,8 @@ public final class dentistUI extends javax.swing.JFrame {
         }
     }
     
-    public void setStatus(){
+
+    public void setStatus() {
         String query = "CALL getStatus(?)";
 
         try (Connection conn = Database.getConnection();
@@ -65,6 +67,18 @@ public final class dentistUI extends javax.swing.JFrame {
 
             stati.setInt(1, dent_id);
             ResultSet rs = stati.executeQuery();
+
+            LocalTime now = LocalTime.now();
+
+            if (now.isAfter(LocalTime.of(17, 0)) && now.isBefore(LocalTime.of(17, 30))) {
+                activity.setText("Closing Time");
+                job_done.setVisible(false);
+                return;
+            } else if (now.isAfter(LocalTime.of(17, 30))) {
+                activity.setText("None - Shift Over");
+                job_done.setVisible(false);
+                return;
+            }
 
             if (rs.next()) {
                 String status = rs.getString("status");
@@ -84,7 +98,6 @@ public final class dentistUI extends javax.swing.JFrame {
                         job_done.setVisible(false);
                         break;
                     default:
-                        // Handle unexpected statuses, maybe log for debugging
                         activity.setText("Unknown Status");
                         job_done.setVisible(false);
                         break;
@@ -98,6 +111,7 @@ public final class dentistUI extends javax.swing.JFrame {
             Logger.getLogger(dentistUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -510,7 +524,7 @@ public final class dentistUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ptntButtonMouseClicked
 
     private void pymtButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pymtButtonMouseClicked
-        paymentsPanel pymtPanel = new paymentsPanel();
+        paymentsPanel pymtPanel = new paymentsPanel(dent_id);
         dashButton.setBackground(Color.decode("#222831"));
         apntButton.setBackground(Color.decode("#222831"));
         ptntButton.setBackground(Color.decode("#222831"));
@@ -540,7 +554,7 @@ public final class dentistUI extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new dentistUI(2).setVisible(true);
+                new dentistUI(1).setVisible(true);
             }
         });
     }
