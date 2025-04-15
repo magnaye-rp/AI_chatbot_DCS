@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 import pickle
 
 # Load intents JSON
-with open("ai/training_data.json") as file:
+with open("training_data.json") as file:
     data = json.load(file)
 
 # Extract training data
@@ -29,7 +29,7 @@ label_encoder = LabelEncoder()
 labels_encoded = label_encoder.fit_transform(labels)
 
 # Save Label Encoder for chatbot.py
-np.save("ai/label_encoder.npy", label_encoder.classes_)
+np.save("label_encoder.npy", label_encoder.classes_)
 
 # Tokenize patterns
 tokenizer = Tokenizer(num_words=5000, oov_token="<OOV>")
@@ -38,11 +38,11 @@ sequences = tokenizer.texts_to_sequences(patterns)
 padded_sequences = pad_sequences(sequences, padding="post")
 
 # Save Tokenizer for chatbot.py
-with open("ai/tokenizer.json", "w") as file:
+with open("tokenizer.json", "w") as file:
     json.dump(tokenizer.word_index, file)
 
 # Load Word2Vec Model
-word2vec_model = gensim.models.Word2Vec.load("ai/word2vec.model")
+word2vec_model = gensim.models.Word2Vec.load("word2vec.model")
 
 # Create embedding matrix
 vocab_size = len(tokenizer.word_index) + 1
@@ -76,5 +76,5 @@ output_layer = Dense(len(set(labels)), activation="softmax")(lstm_output)
 model = keras.Model(inputs=input_layer, outputs=output_layer)
 model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
-model.fit(padded_sequences, np.array(labels_encoded), epochs=1000, batch_size=8, verbose=1)
-model.save("ai/chatbot_model.h5")
+model.fit(padded_sequences, np.array(labels_encoded), epochs=4000, batch_size=8, verbose=1)
+model.save("chatbot_model.h5")

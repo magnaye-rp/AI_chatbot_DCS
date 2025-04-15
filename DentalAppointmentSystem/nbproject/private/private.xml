@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/management/management.java</file>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/management/manageAppoinments.java</file>
             <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/staff/appointmentsPanel.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/staff/paymentsPanel.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/beans/HorizontalBarChart.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/beans/LineChartBean.java</file>
             <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/staff/dentistUI.java</file>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/staff/dashboardPanel.java</file>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/beans/LegendTitle.java</file>
         </group>
     </open-files>
 </project-private>
