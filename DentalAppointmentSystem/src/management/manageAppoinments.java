@@ -154,6 +154,14 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         plannerPanel = new javax.swing.JPanel();
         dentitsComboBox = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -193,6 +201,39 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         });
         jPanel1.add(dentitsComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 12, 575, 41));
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 20, 1000, -1));
+
+        jButton1.setText("jButton1");
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1550, 460, -1, -1));
+
+        jButton2.setText("jButton2");
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1460, 460, -1, -1));
+
+        jTextField1.setText("jTextField1");
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 470, 330, -1));
+
+        jTextField2.setText("jTextField1");
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 550, 330, -1));
+
+        jTextField3.setText("jTextField1");
+        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 600, 330, -1));
+
+        jTextField4.setText("jTextField1");
+        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 510, 330, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -219,7 +260,15 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<DentistItem> dentitsComboBox;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JPanel plannerPanel;
     // End of variables declaration//GEN-END:variables
 }
