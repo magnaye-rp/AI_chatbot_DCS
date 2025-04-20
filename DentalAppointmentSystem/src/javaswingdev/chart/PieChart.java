@@ -116,7 +116,7 @@ public class PieChart extends JComponent {
             double textAngle = -(drawAngle - angle / 2);
             double cosX = Math.cos(Math.toRadians(textAngle));
             double sinY = Math.sin(Math.toRadians(textAngle));
-            String text = getPercentage(data.getValues()) + "%";
+            String text = data.getName();
             g2.setFont(getFont().deriveFont(fontSize));
             FontMetrics fm = g2.getFontMetrics();
             Rectangle2D r = fm.getStringBounds(text, g2);
@@ -129,7 +129,7 @@ public class PieChart extends JComponent {
                 double labelSize = size / 2;
                 double labelX = centerX + cosX * labelSize;
                 double labelY = centerY + sinY * labelSize;
-                String detail = format.format(data.getValues()) + " (" + text + ")";
+                String detail = format.format(data.getValues()) + " (" + getPercentage(data.getValues()) + "%" + ")";
                 drawPopupLabel(g2, size, textAngle, labelX, labelY, data.getName(), detail);
             }
             drawAngle -= angle;

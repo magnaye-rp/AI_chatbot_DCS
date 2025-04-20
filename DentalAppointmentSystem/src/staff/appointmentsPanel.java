@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.sql.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +33,7 @@ public final class appointmentsPanel extends javax.swing.JInternalFrame {
         loadAppoinmentsTable();
         appointmentRate();
     }
+    
     
     public void setupCalendar() {
         calendar = new Calendar();

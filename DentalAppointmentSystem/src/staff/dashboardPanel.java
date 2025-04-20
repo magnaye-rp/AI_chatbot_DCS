@@ -1,7 +1,7 @@
 package staff;
 
 import com.raven.chart.ModelChart;
-import java.awt.Color;
+import java.awt.*;
 import java.sql.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -9,14 +9,13 @@ import java.util.concurrent.Executors;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javaswingdev.chart.ModelPieChart;
 import javaswingdev.chart.PieChart;
+import javax.swing.*;
 
 
 public class dashboardPanel extends javax.swing.JInternalFrame {
@@ -44,8 +43,10 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 loadChart();
+                revenue_pie_chart();
             } catch (Exception e) {
                 e.printStackTrace();
+                
             }
         }, 0, 5, TimeUnit.MINUTES);
     }
@@ -55,7 +56,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         chart.addLegend("Daily Services Done", new Color(245, 189, 135));
 
         String dailyServicesQuery = "SELECT YEARWEEK(date_done) AS week, DAYNAME(date_done) AS day, COUNT(patient_id) AS daily_count " +
-    "FROM services_done WHERE dentist_id = ? AND YEARWEEK(date_done) = YEARWEEK(CURDATE()) " +
+    "FROM services_done WHERE dentist_id = ? AND YEARWEEK(date_done, 1) = YEARWEEK(CURDATE(),1) " +
     "GROUP BY YEARWEEK(date_done), DAYOFWEEK(date_done) " +
     "ORDER BY YEARWEEK(date_done), DAYOFWEEK(date_done)";
 
@@ -74,7 +75,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
         String earningsQuery = "SELECT SUM(s.service_cost) AS total " +
                                "FROM services_done sd " +
                                "JOIN service s ON s.service_id = sd.service_id " +
-                               "WHERE sd.dentist_id = ? AND YEARWEEK(date_done) = YEARWEEK(CURDATE());";
+                               "WHERE sd.dentist_id = ? AND YEARWEEK(date_done,1) = YEARWEEK(CURDATE(),1);";
         
         String mostFreq = "SELECT p.patient_id, p.full_name, COUNT(a.appointment_id) AS appointment_count " +
                "FROM appointment a " +
@@ -135,6 +136,22 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
 
     final void revenue_pie_chart() {
         List<revenueData> dailyRevData = fetchRevenue();
+        revenue_pie_chart.clearData(); // Optional: clear previous data
+
+        if (dailyRevData == null || dailyRevData.isEmpty()) {
+            JLabel noDataLabel = new JLabel("No services done yet.");
+            noDataLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            noDataLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            noDataLabel.setForeground(Color.GRAY);
+
+            revenue_pie_chart.setLayout(new BorderLayout());
+            revenue_pie_chart.removeAll();
+            revenue_pie_chart.add(noDataLabel, BorderLayout.CENTER);
+            revenue_pie_chart.revalidate();
+            revenue_pie_chart.repaint();
+            return;
+        }
+
         Map<String, Float> dayRevenue = new HashMap<>();
 
         for (revenueData day : dailyRevData) {
@@ -144,33 +161,22 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
             dayRevenue.put(weekDay, current + revenue);
         }
 
+        revenue_pie_chart.removeAll();
+        revenue_pie_chart.setLayout(null);
+
         for (Map.Entry<String, Float> entry : dayRevenue.entrySet()) {
             String week_day = entry.getKey();
             float rev = entry.getValue();
             Color color;
 
             switch (week_day) {
-                case "Monday":
-                    color = new Color(0, 0, 255); // BLUE
-                    break;
-                case "Tuesday":
-                    color = new Color(255, 0, 0); // RED
-                    break;
-                case "Wednesday":
-                    color = new Color(255, 165, 0); // ORANGE
-                    break;
-                case "Thursday":
-                    color = new Color(255, 255, 0); // YELLOW
-                    break;
-                case "Friday":
-                    color = new Color(0, 128, 0); // GREEN
-                    break;
-                case "Saturday":
-                    color = new Color(128, 0, 128); // PURPLE
-                    break;
-                default:
-                    color = new Color(128, 128, 128); // GRAY
-                    break;
+                case "Monday": color = new Color(0, 0, 255); break;
+                case "Tuesday": color = new Color(255, 0, 0); break;
+                case "Wednesday": color = new Color(255, 165, 0); break;
+                case "Thursday": color = new Color(255, 255, 0); break;
+                case "Friday": color = new Color(0, 128, 0); break;
+                case "Saturday": color = new Color(128, 0, 128); break;
+                default: color = new Color(128, 128, 128); break;
             }
 
             revenue_pie_chart.addData(new ModelPieChart(week_day, rev, color));
@@ -178,6 +184,7 @@ public class dashboardPanel extends javax.swing.JInternalFrame {
 
         revenue_pie_chart.setChartType(PieChart.PeiChartType.DONUT_CHART);
     }
+
 
     private List<revenueData> fetchRevenue(){
         List<revenueData> dailyRevData = new ArrayList<>();

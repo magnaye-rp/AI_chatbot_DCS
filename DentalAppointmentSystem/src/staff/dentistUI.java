@@ -32,6 +32,7 @@ public final class dentistUI extends javax.swing.JFrame {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a");
                 String formattedDateTime = now.format(formatter);
                 SwingUtilities.invokeLater(() -> service_date.setText(formattedDateTime));
+                setStatus();
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,10 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package management;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 import staff.dashboardPanel;
 
 /**
@@ -14,7 +17,24 @@ import staff.dashboardPanel;
 public class management extends javax.swing.JFrame {
 
     public management() {
+        autoTime();
         initComponents();
+        
+    }
+    
+    public void autoTime() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a");
+                String formattedDateTime = now.format(formatter);
+                SwingUtilities.invokeLater(() -> service_date.setText(formattedDateTime));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     @SuppressWarnings("unchecked")
@@ -41,6 +61,7 @@ public class management extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         displayPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        service_date = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -318,6 +339,15 @@ public class management extends javax.swing.JFrame {
         jLabel3.setText("       ");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 950, 800, -1));
 
+        service_date.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        service_date.setForeground(new java.awt.Color(255, 255, 255));
+        service_date.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a");
+        String formattedDateTime = now.format(formatter);
+        service_date.setText(formattedDateTime);
+        jPanel1.add(service_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1010, 280, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -346,7 +376,7 @@ public class management extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeMouseClicked
-                home.setBackground(Color.decode("#00ADB5"));
+        home.setBackground(Color.decode("#00ADB5"));
         appointments.setBackground(Color.decode("#1B262C"));
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
@@ -492,6 +522,7 @@ public class management extends javax.swing.JFrame {
     private javax.swing.JPanel patients;
     private javax.swing.JPanel payments;
     private javax.swing.JPanel reports;
+    private javax.swing.JLabel service_date;
     private javax.swing.JPanel settings;
     // End of variables declaration//GEN-END:variables
 }
