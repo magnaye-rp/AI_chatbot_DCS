@@ -54,8 +54,6 @@ public class management extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         payments = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        reports = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
         settings = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -125,6 +123,7 @@ public class management extends javax.swing.JFrame {
         jPanel1.add(home, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, -1, -1));
 
         appointments.setBackground(new java.awt.Color(27, 38, 44));
+        appointments.setPreferredSize(new java.awt.Dimension(326, 50));
         appointments.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 appointmentsMouseClicked(evt);
@@ -143,7 +142,7 @@ public class management extends javax.swing.JFrame {
             appointmentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(appointmentsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addContainerGap())
         );
         appointmentsLayout.setVerticalGroup(
@@ -154,10 +153,10 @@ public class management extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.add(appointments, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 270, 50));
+        jPanel1.add(appointments, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 326, 50));
 
         dentists.setBackground(new java.awt.Color(27, 38, 44));
-        dentists.setPreferredSize(new java.awt.Dimension(260, 50));
+        dentists.setPreferredSize(new java.awt.Dimension(326, 50));
         dentists.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 dentistsMouseClicked(evt);
@@ -176,7 +175,7 @@ public class management extends javax.swing.JFrame {
             dentistsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dentistsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dentistsLayout.setVerticalGroup(
@@ -187,9 +186,10 @@ public class management extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.add(dentists, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 280, -1));
+        jPanel1.add(dentists, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 330, -1));
 
         patients.setBackground(new java.awt.Color(27, 38, 44));
+        patients.setPreferredSize(new java.awt.Dimension(326, 50));
         patients.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 patientsMouseClicked(evt);
@@ -219,9 +219,10 @@ public class management extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.add(patients, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, 272, 50));
+        jPanel1.add(patients, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 80, 330, 50));
 
         payments.setBackground(new java.awt.Color(27, 38, 44));
+        payments.setPreferredSize(new java.awt.Dimension(326, 50));
         payments.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 paymentsMouseClicked(evt);
@@ -240,7 +241,7 @@ public class management extends javax.swing.JFrame {
             paymentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paymentsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addContainerGap())
         );
         paymentsLayout.setVerticalGroup(
@@ -251,42 +252,10 @@ public class management extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.add(payments, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 80, 270, -1));
-
-        reports.setBackground(new java.awt.Color(27, 38, 44));
-        reports.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                reportsMouseClicked(evt);
-            }
-        });
-
-        jLabel9.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("REPORTS");
-        jLabel9.setFocusable(false);
-
-        javax.swing.GroupLayout reportsLayout = new javax.swing.GroupLayout(reports);
-        reports.setLayout(reportsLayout);
-        reportsLayout.setHorizontalGroup(
-            reportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(reportsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        reportsLayout.setVerticalGroup(
-            reportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(reportsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jPanel1.add(reports, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 80, 270, -1));
+        jPanel1.add(payments, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 80, 330, -1));
 
         settings.setBackground(new java.awt.Color(27, 38, 44));
-        settings.setPreferredSize(new java.awt.Dimension(272, 50));
+        settings.setPreferredSize(new java.awt.Dimension(326, 50));
         settings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 settingsMouseClicked(evt);
@@ -305,7 +274,7 @@ public class management extends javax.swing.JFrame {
             settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addContainerGap())
         );
         settingsLayout.setVerticalGroup(
@@ -316,7 +285,7 @@ public class management extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.add(settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(1410, 80, -1, -1));
+        jPanel1.add(settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(1350, 80, -1, -1));
         jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 950, 1680, 30));
 
         displayPanel.setBackground(new java.awt.Color(47, 57, 77));
@@ -440,19 +409,6 @@ public class management extends javax.swing.JFrame {
         displayPanel.add(panel).setVisible(true);
     }//GEN-LAST:event_paymentsMouseClicked
 
-    private void reportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportsMouseClicked
-        home.setBackground(Color.decode("#1B262C"));
-        appointments.setBackground(Color.decode("#1B262C"));
-        dentists.setBackground(Color.decode("#1B262C"));
-        patients.setBackground(Color.decode("#1B262C"));
-        payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#00ADB5"));
-        settings.setBackground(Color.decode("#1B262C"));
-        manageReports panel = new manageReports();
-        displayPanel.removeAll();
-        displayPanel.add(panel).setVisible(true);
-    }//GEN-LAST:event_reportsMouseClicked
-
     private void settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMouseClicked
         home.setBackground(Color.decode("#1B262C"));
         appointments.setBackground(Color.decode("#1B262C"));
@@ -515,13 +471,11 @@ public class management extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel japanel2;
     private javax.swing.JPanel patients;
     private javax.swing.JPanel payments;
-    private javax.swing.JPanel reports;
     private javax.swing.JLabel service_date;
     private javax.swing.JPanel settings;
     // End of variables declaration//GEN-END:variables
