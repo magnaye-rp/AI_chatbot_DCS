@@ -336,7 +336,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         displayPanel.removeAll();
         displayPanel.add(dashPanel).setVisible(true);
@@ -350,7 +349,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         managementDashboard panel = new managementDashboard();
         displayPanel.removeAll();
@@ -363,7 +361,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         manageAppoinments panel = new manageAppoinments();
         displayPanel.removeAll();
@@ -376,7 +373,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#00ADB5"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         manageDentists panel = new manageDentists();
         displayPanel.removeAll();
@@ -389,7 +385,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#00ADB5"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         managePatients panel = new managePatients();
         displayPanel.removeAll();
@@ -402,7 +397,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#00ADB5"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#1B262C"));
         managePayments panel = new managePayments();
         displayPanel.removeAll();
@@ -415,7 +409,6 @@ public class management extends javax.swing.JFrame {
         dentists.setBackground(Color.decode("#1B262C"));
         patients.setBackground(Color.decode("#1B262C"));
         payments.setBackground(Color.decode("#1B262C"));
-        reports.setBackground(Color.decode("#1B262C"));
         settings.setBackground(Color.decode("#00ADB5"));
         Settings panel = new Settings();
         displayPanel.removeAll();

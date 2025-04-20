@@ -46,7 +46,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="managementDashboard dashPanel = new managementDashboard();&#xa;        home.setBackground(Color.decode(&quot;#00ADB5&quot;));&#xa;        appointments.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        dentists.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        patients.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        payments.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        reports.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        settings.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        displayPanel.removeAll();&#xa;        displayPanel.add(dashPanel).setVisible(true);"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="managementDashboard dashPanel = new managementDashboard();&#xa;        home.setBackground(Color.decode(&quot;#00ADB5&quot;));&#xa;        appointments.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        dentists.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        patients.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        payments.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        settings.setBackground(Color.decode(&quot;#1B262C&quot;));&#xa;        displayPanel.removeAll();&#xa;        displayPanel.add(dashPanel).setVisible(true);"/>
       </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">

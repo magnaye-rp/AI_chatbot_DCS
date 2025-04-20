@@ -321,6 +321,8 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         service_count = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         revenue = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -331,14 +333,19 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         setSize(new java.awt.Dimension(1660, 800));
 
         jPanel1.setBackground(new java.awt.Color(34, 40, 49));
+        jPanel1.setLayout(null);
 
         chart.setBackground(new java.awt.Color(34, 40, 49));
         chart.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(chart);
+        chart.setBounds(39, 90, 790, 445);
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("TOTAL SERVICES DONE");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(39, 29, 790, 43);
 
         jTable1.setBackground(new java.awt.Color(34, 40, 49));
         jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -396,6 +403,9 @@ public class managementDashboard extends javax.swing.JInternalFrame {
             }
         });
 
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(39, 553, 780, 186);
+
         javax.swing.GroupLayout dentistDistLayout = new javax.swing.GroupLayout(dentistDist);
         dentistDist.setLayout(dentistDistLayout);
         dentistDistLayout.setHorizontalGroup(
@@ -406,6 +416,9 @@ public class managementDashboard extends javax.swing.JInternalFrame {
             dentistDistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 50, Short.MAX_VALUE)
         );
+
+        jPanel1.add(dentistDist);
+        dentistDist.setBounds(847, 58, 757, 50);
 
         javax.swing.GroupLayout serviceDistLayout = new javax.swing.GroupLayout(serviceDist);
         serviceDist.setLayout(serviceDistLayout);
@@ -418,15 +431,22 @@ public class managementDashboard extends javax.swing.JInternalFrame {
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
+        jPanel1.add(serviceDist);
+        serviceDist.setBounds(847, 169, 757, 50);
+
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("DISTRIBUTION OF VARIETY OF SERVICES THIS WEEK:");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(847, 140, 458, 23);
 
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("DENTIST SERVICE DISTRIBUTION THIS WEEK:");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(847, 29, 389, 23);
 
         dentist_revenue_pie.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
 
@@ -435,6 +455,9 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         dentist_revenue_pie.add(jLabel1);
         jLabel1.setBounds(110, 350, 165, 17);
 
+        jPanel1.add(dentist_revenue_pie);
+        dentist_revenue_pie.setBounds(841, 309, 389, 389);
+
         service_revenue_pie.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
 
         jLabel5.setForeground(new java.awt.Color(51, 51, 51));
@@ -442,92 +465,42 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         service_revenue_pie.add(jLabel5);
         jLabel5.setBounds(100, 350, 201, 17);
 
+        jPanel1.add(service_revenue_pie);
+        service_revenue_pie.setBounds(1242, 309, 389, 389);
+
         jLabel6.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("TOTAL SERVICE DONE THIS WEEK:");
+        jPanel1.add(jLabel6);
+        jLabel6.setBounds(868, 249, 298, 23);
 
         service_count.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         service_count.setForeground(new java.awt.Color(255, 255, 255));
         service_count.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         service_count.setText("0");
+        jPanel1.add(service_count);
+        service_count.setBounds(1172, 249, 69, 23);
 
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("TOTAL REVENUE THIS WEEK:");
+        jPanel1.add(jLabel7);
+        jLabel7.setBounds(841, 710, 249, 23);
 
         revenue.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         revenue.setForeground(new java.awt.Color(255, 255, 255));
         revenue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         revenue.setText("0");
+        jPanel1.add(revenue);
+        revenue.setBounds(1102, 710, 162, 23);
+        jPanel1.add(jSeparator1);
+        jSeparator1.setBounds(840, 290, 810, 10);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(dentist_revenue_pie, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(service_revenue_pie, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(dentistDist, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(serviceDist, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(service_count, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(revenue, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(148, 148, 148)))
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dentistDist, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(serviceDist, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(service_count))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(service_revenue_pie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dentist_revenue_pie, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(revenue))
-                        .addGap(6, 6, 6)))
-                .addContainerGap(35, Short.MAX_VALUE))
-        );
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jPanel1.add(jSeparator2);
+        jSeparator2.setBounds(830, 20, 10, 740);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -555,6 +528,8 @@ public class managementDashboard extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel revenue;
     private beans.singleBarChart serviceDist;

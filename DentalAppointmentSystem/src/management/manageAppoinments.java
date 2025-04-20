@@ -10,6 +10,7 @@ import com.mindfusion.common.DateTime;
 import com.mindfusion.scheduling.*;
 import com.mindfusion.scheduling.model.Appointment;
 import java.awt.event.ItemEvent;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.*;
@@ -17,8 +18,7 @@ import javax.swing.*;
 import static javax.swing.JOptionPane.*;
 
 public class manageAppoinments extends javax.swing.JInternalFrame {
-
-    private com.mindfusion.scheduling.Calendar calendar;
+    
     public manageAppoinments() {
         setupCalendar();
         initComponents();
@@ -204,6 +204,8 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
         plannerPanel = new javax.swing.JPanel();
         dentitsComboBox = new javax.swing.JComboBox<>();
@@ -224,6 +226,11 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         dents = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        timeCheckBox = new javax.swing.JCheckBox();
+        datePicker = new beans.CustomDateTimePickerBean();
+        jSeparator5 = new javax.swing.JSeparator();
+        jSeparator6 = new javax.swing.JSeparator();
+        jSeparator7 = new javax.swing.JSeparator();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -346,7 +353,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
 
         jTable1.getColumnModel().removeColumn(jTable1.getColumnModel().getColumn(0));
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, 1000, 460));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, 1000, 420));
 
         jButton1.setText("ADD");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -373,12 +380,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 nameFieldFocusLost(evt);
             }
         });
-        nameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
-        jPanel1.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 570, 460, 40));
+        jPanel1.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 540, 460, 40));
 
         addressField.setBackground(new java.awt.Color(27, 38, 44));
         addressField.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -396,12 +398,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 addressFieldFocusLost(evt);
             }
         });
-        addressField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressFieldActionPerformed(evt);
-            }
-        });
-        jPanel1.add(addressField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 720, 460, 40));
+        jPanel1.add(addressField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 690, 460, 40));
 
         numField.setBackground(new java.awt.Color(27, 38, 44));
         numField.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -419,12 +416,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 numFieldFocusLost(evt);
             }
         });
-        numField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numFieldActionPerformed(evt);
-            }
-        });
-        jPanel1.add(numField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 650, 460, 40));
+        jPanel1.add(numField, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 620, 460, 40));
         numField.getAccessibleContext().setAccessibleName("");
 
         jCheckBox1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -436,12 +428,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 jCheckBox1ItemStateChanged(evt);
             }
         });
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 720, 160, 30));
+        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 720, 160, 30));
 
         servs.setBackground(new java.awt.Color(27, 38, 44));
         servs.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -458,7 +445,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 servsItemStateChanged(evt);
             }
         });
-        jPanel1.add(servs, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 570, 420, 40));
+        jPanel1.add(servs, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 530, 420, 40));
 
         jPanel2.setBackground(new java.awt.Color(34, 40, 49));
 
@@ -484,23 +471,23 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 510, 260, 40));
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 530, 1010, 20));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, 260, 40));
+        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 490, 1010, 20));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 550, 10, 210));
+        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 500, 10, 260));
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Address");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 700, 150, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 670, 150, -1));
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Customer Name");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 550, 150, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 520, 150, -1));
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Contact Number");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 630, 150, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 600, 150, -1));
 
         dents.setBackground(new java.awt.Color(27, 38, 44));
         dents.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -512,7 +499,12 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         dents.setLightWeightPopupEnabled(false);
         dents.setOpaque(true);
         dents.setRequestFocusEnabled(false);
-        jPanel1.add(dents, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 640, 420, 40));
+        dents.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                dentsItemStateChanged(evt);
+            }
+        });
+        jPanel1.add(dents, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 600, 420, 40));
 
         jLabel5.setBackground(new java.awt.Color(34, 40, 49));
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
@@ -521,6 +513,22 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         jLabel5.setText("APPOINTMENTS FOR TODAY");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 10, 370, 20));
+
+        timeCheckBox.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        timeCheckBox.setForeground(new java.awt.Color(255, 255, 255));
+        timeCheckBox.setText("Custom Time");
+        timeCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                timeCheckBoxItemStateChanged(evt);
+            }
+        });
+        jPanel1.add(timeCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 670, -1, 30));
+        jPanel1.add(datePicker, new org.netbeans.lib.awtextra.AbsoluteConstraints(1350, 670, -1, -1));
+
+        jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, 10, 760));
+        jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1270, 20, 370, -1));
+        jPanel1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 20, 370, 10));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -532,6 +540,8 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        datePicker.setVisible(false);
     }// </editor-fold>//GEN-END:initComponents
 
     private void dentitsComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_dentitsComboBoxItemStateChanged
@@ -545,23 +555,25 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_dentitsComboBoxItemStateChanged
 
-    private void numFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numFieldActionPerformed
-
-    private void addressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addressFieldActionPerformed
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
     private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
                     isnew = true;
                     addressField.setVisible(isnew);
                     jLabel2.setVisible(isnew);
+                    try (Connection conn = Database.getConnection();
+                        PreparedStatement stmt = conn.prepareStatement("SELECT full_name FROM dentist")) {
+
+                       ResultSet rs = stmt.executeQuery();
+                       dents.removeAllItems();
+
+                       while (rs.next()) {
+                           String name = rs.getString("full_name");
+                           dents.addItem(name);
+                       }
+
+                   } catch (SQLException e) {
+                       e.printStackTrace();
+                   }
                 } else {
                     isnew = false;
                     addressField.setVisible(isnew);
@@ -603,10 +615,6 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
             Logger.getLogger(manageAppoinments.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameFieldActionPerformed
 
     private void nameFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameFieldFocusGained
         if((nameField.getText()).equals("e.g. Juan Dela Cruz")){
@@ -676,8 +684,45 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_servsItemStateChanged
 
+    private void timeCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_timeCheckBoxItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    custom = true;
+                    datePicker.setVisible(true);
+                } else {
+                    custom = false;
+                    comboboxes();
+                    datePicker.setVisible(false);
+                }
+    }//GEN-LAST:event_timeCheckBoxItemStateChanged
+
+    private void dentsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_dentsItemStateChanged
+        if (custom) {
+        datePicker.clearBlockedDateTimeRanges();
+        String name = (String) dents.getSelectedItem();
+        String query = "SELECT a.appointment_date, s.duration_minutes "
+                     + "FROM appointment a "
+                     + "INNER JOIN dentist d ON d.dentist_id = a.dentist_id "
+                     + "INNER JOIN service s ON s.service_id = a.service_id "
+                     + "WHERE d.full_name = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LocalDateTime time = rs.getTimestamp("appointment_date").toLocalDateTime();
+                int minutes = rs.getInt("duration_minutes");
+                datePicker.setBlockedDateTimeRange(time, minutes);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    }//GEN-LAST:event_dentsItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressField;
+    private beans.CustomDateTimePickerBean datePicker;
     private javax.swing.JComboBox<DentistItem> dentitsComboBox;
     private javax.swing.JComboBox<String> dents;
     private javax.swing.JButton jButton1;
@@ -692,13 +737,21 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField numField;
     private javax.swing.JPanel plannerPanel;
     private javax.swing.JComboBox<String> servs;
+    private javax.swing.JCheckBox timeCheckBox;
     // End of variables declaration//GEN-END:variables
+    private com.mindfusion.scheduling.Calendar calendar;
     private boolean isnew = true;
+    private boolean custom = false;
 }
 
 
