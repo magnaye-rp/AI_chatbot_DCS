@@ -133,7 +133,7 @@ public class management extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("APPPOINMENTS");
+        jLabel4.setText("APPPOINTMENTS");
         jLabel4.setFocusable(false);
 
         javax.swing.GroupLayout appointmentsLayout = new javax.swing.GroupLayout(appointments);

@@ -200,6 +200,33 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         }
     }
     
+    void blockdates(){
+        if (custom) {
+        datePicker.clearBlockedDateTimeRanges();
+        String name = (String) dents.getSelectedItem();
+        String query = "SELECT a.appointment_date, s.duration_minutes "
+                     + "FROM appointment a "
+                     + "INNER JOIN dentist d ON d.dentist_id = a.dentist_id "
+                     + "INNER JOIN service s ON s.service_id = a.service_id "
+                     + "WHERE d.full_name = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                LocalDateTime time = rs.getTimestamp("appointment_date")
+                       .toLocalDateTime()
+                       .minusMinutes(before_time);
+                int minutes = rs.getInt("duration_minutes") + before_time;
+                datePicker.setBlockedDateTimeRange(time, minutes);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -597,9 +624,15 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
             String address = addressField.getText();
             String dentist = (String) dents.getSelectedItem();
             String service = (String) servs.getSelectedItem();
-            String call = "CALL existingUserAppoinment(?,?,?,?)";
+            String call = "CALL existingUserAppoinment(?,?,?,?,?,?)";
+            LocalDateTime time = LocalDateTime.now();
+            String status = "In Progress";
+            if(custom){
+                time = datePicker.getDateTime();
+                status = "Pending";
+            }
             if(isnew){
-                call = "CALL newUserAppoinment(?,?,?,?,?)";
+                call = "CALL newUserAppoinment(?,?,?,?,?,?,?)";
             }
             try(Connection conn = Database.getConnection();
                 CallableStatement cstmt = (CallableStatement) conn.prepareCall(call)){ 
@@ -607,11 +640,26 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 cstmt.setString(2, num);
                 cstmt.setString(3, dentist);
                 cstmt.setString(4, service);
-                if(isnew){cstmt.setString(5, address);}
-                cstmt.executeQuery();
-                JOptionPane.showMessageDialog(rootPane, "This customer is ready to go!!!", "Added to Appointments", INFORMATION_MESSAGE);
-                                
-            } catch (SQLException ex) {
+                cstmt.setTimestamp(5, Timestamp.valueOf(time));
+                cstmt.setString(6, status);
+                if(isnew){cstmt.setString(7, address);}
+                ResultSet rs = cstmt.executeQuery();
+                if(rs.next()){
+                String output = rs.getString("status");
+                System.out.println("Status from DB: " + output);  // Check the output from DB
+                if(output.equals("W move: Appointment created successfully")){
+                    if(custom){
+                        JOptionPane.showMessageDialog(rootPane, "This customer's appointment is booked!!!", "Added to Appointments", INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(rootPane, "This customer is ready to go!!!", "Added to Appointments", INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "There is conflict adding to database, Please check if there's no Schedule Conflict", output, INFORMATION_MESSAGE);
+                }
+            }      
+            pendings();
+            comboboxes();
+        } catch (SQLException ex) {
             Logger.getLogger(manageAppoinments.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -667,17 +715,25 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
 
     private void servsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_servsItemStateChanged
         String query = "CALL getAvailableDentistATM(?)";
+        String query1 = "SELECT duration_minutes FROM service WHERE service_name = ?";
         String serv = (String) servs.getSelectedItem();
         try(Connection conn = Database.getConnection();
-             CallableStatement call = conn.prepareCall(query)){
+             CallableStatement call = conn.prepareCall(query);
+             PreparedStatement ps = conn.prepareStatement(query1)){
             call.setString(1, serv);
+            ps.setString(1,serv);
             ResultSet rs = call.executeQuery();
+            ResultSet rs1 = ps.executeQuery();
+            if(rs1.next()){
+                before_time = rs1.getInt(1) - 30;
+            }
             dents.removeAllItems();
 
            while (rs.next()) {
                String name = rs.getString("full_name");
                dents.addItem(name);
            }
+           blockdates();
             
         } catch (SQLException ex) {
             Logger.getLogger(manageAppoinments.class.getName()).log(Level.SEVERE, null, ex);
@@ -688,6 +744,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
                     custom = true;
                     datePicker.setVisible(true);
+                    blockdates();
                 } else {
                     custom = false;
                     comboboxes();
@@ -696,28 +753,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_timeCheckBoxItemStateChanged
 
     private void dentsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_dentsItemStateChanged
-        if (custom) {
-        datePicker.clearBlockedDateTimeRanges();
-        String name = (String) dents.getSelectedItem();
-        String query = "SELECT a.appointment_date, s.duration_minutes "
-                     + "FROM appointment a "
-                     + "INNER JOIN dentist d ON d.dentist_id = a.dentist_id "
-                     + "INNER JOIN service s ON s.service_id = a.service_id "
-                     + "WHERE d.full_name = ?";
-
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, name);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                LocalDateTime time = rs.getTimestamp("appointment_date").toLocalDateTime();
-                int minutes = rs.getInt("duration_minutes");
-                datePicker.setBlockedDateTimeRange(time, minutes);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+         blockdates();
     }//GEN-LAST:event_dentsItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -752,6 +788,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     private com.mindfusion.scheduling.Calendar calendar;
     private boolean isnew = true;
     private boolean custom = false;
+    private int before_time = 0;
 }
 
 

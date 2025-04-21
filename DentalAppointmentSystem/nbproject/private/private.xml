@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/management/management.java</file>
             <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/management/manageDentists.java</file>
-            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/staff/paymentsPanel.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/chart/PolarAreaChart.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/beans/CustomDateTimePickerBean.java</file>
+            <file>file:/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DentalAppointmentSystem/src/management/manageAppoinments.java</file>
         </group>
     </open-files>
 </project-private>
