@@ -321,8 +321,14 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         service_count = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         revenue = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -338,14 +344,14 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         chart.setBackground(new java.awt.Color(34, 40, 49));
         chart.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.add(chart);
-        chart.setBounds(39, 90, 790, 445);
+        chart.setBounds(20, 60, 790, 440);
 
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("TOTAL SERVICES DONE");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(39, 29, 790, 43);
+        jLabel2.setBounds(50, 10, 320, 43);
 
         jTable1.setBackground(new java.awt.Color(34, 40, 49));
         jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -404,7 +410,7 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         });
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(39, 553, 780, 186);
+        jScrollPane1.setBounds(30, 520, 780, 230);
 
         javax.swing.GroupLayout dentistDistLayout = new javax.swing.GroupLayout(dentistDist);
         dentistDist.setLayout(dentistDistLayout);
@@ -414,11 +420,11 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         );
         dentistDistLayout.setVerticalGroup(
             dentistDistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         jPanel1.add(dentistDist);
-        dentistDist.setBounds(847, 58, 757, 50);
+        dentistDist.setBounds(850, 130, 757, 40);
 
         javax.swing.GroupLayout serviceDistLayout = new javax.swing.GroupLayout(serviceDist);
         serviceDist.setLayout(serviceDistLayout);
@@ -428,79 +434,132 @@ public class managementDashboard extends javax.swing.JInternalFrame {
         );
         serviceDistLayout.setVerticalGroup(
             serviceDistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         jPanel1.add(serviceDist);
-        serviceDist.setBounds(847, 169, 757, 50);
+        serviceDist.setBounds(850, 220, 757, 40);
 
-        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("DISTRIBUTION OF VARIETY OF SERVICES THIS WEEK:");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(847, 140, 458, 23);
+        jLabel3.setBounds(850, 190, 370, 18);
 
-        jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("DENTIST SERVICE DISTRIBUTION THIS WEEK:");
         jPanel1.add(jLabel4);
-        jLabel4.setBounds(847, 29, 389, 23);
+        jLabel4.setBounds(850, 100, 320, 18);
 
         dentist_revenue_pie.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
 
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setText("Dentists Revenue this Week");
         dentist_revenue_pie.add(jLabel1);
-        jLabel1.setBounds(110, 350, 165, 17);
+        jLabel1.setBounds(110, 360, 165, 17);
 
         jPanel1.add(dentist_revenue_pie);
-        dentist_revenue_pie.setBounds(841, 309, 389, 389);
+        dentist_revenue_pie.setBounds(860, 318, 370, 380);
 
         service_revenue_pie.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
 
         jLabel5.setForeground(new java.awt.Color(51, 51, 51));
         jLabel5.setText("Daily Service Revenue Distribution");
         service_revenue_pie.add(jLabel5);
-        jLabel5.setBounds(100, 350, 201, 17);
+        jLabel5.setBounds(100, 360, 201, 17);
 
         jPanel1.add(service_revenue_pie);
-        service_revenue_pie.setBounds(1242, 309, 389, 389);
+        service_revenue_pie.setBounds(1251, 318, 380, 380);
 
         jLabel6.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("TOTAL SERVICE DONE THIS WEEK:");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(868, 249, 298, 23);
+        jLabel6.setBounds(850, 60, 298, 23);
 
         service_count.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         service_count.setForeground(new java.awt.Color(255, 255, 255));
         service_count.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         service_count.setText("0");
         jPanel1.add(service_count);
-        service_count.setBounds(1172, 249, 69, 23);
+        service_count.setBounds(1160, 60, 69, 23);
 
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("TOTAL REVENUE THIS WEEK:");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(841, 710, 249, 23);
+        jLabel7.setBounds(1060, 710, 249, 30);
 
         revenue.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         revenue.setForeground(new java.awt.Color(255, 255, 255));
         revenue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         revenue.setText("0");
         jPanel1.add(revenue);
-        revenue.setBounds(1102, 710, 162, 23);
+        revenue.setBounds(1320, 710, 162, 30);
+
+        jPanel3.setBackground(new java.awt.Color(34, 40, 49));
+
+        jLabel9.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("REVENUE DISTRIBUTION");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel3);
+        jPanel3.setBounds(870, 280, 300, 40);
+
+        jPanel2.setBackground(new java.awt.Color(34, 40, 49));
+
+        jLabel8.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("THIS WEEK'S REPORT");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(1360, 10, 270, 50);
         jPanel1.add(jSeparator1);
-        jSeparator1.setBounds(840, 290, 810, 10);
+        jSeparator1.setBounds(840, 300, 810, 10);
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator2);
-        jSeparator2.setBounds(830, 20, 10, 740);
+        jSeparator2.setBounds(830, 40, 10, 720);
+        jPanel1.add(jSeparator3);
+        jSeparator3.setBounds(350, 30, 1300, 20);
+        jPanel1.add(jSeparator4);
+        jSeparator4.setBounds(10, 30, 60, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -526,10 +585,16 @@ public class managementDashboard extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel revenue;
     private beans.singleBarChart serviceDist;
