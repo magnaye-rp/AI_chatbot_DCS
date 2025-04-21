@@ -9,6 +9,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.CategoryLabelPositions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,7 @@ public class LineChartBean extends JPanel {
 
         // Axis text colors
         CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
         domainAxis.setLabelPaint(white);
         domainAxis.setTickLabelPaint(white);
 

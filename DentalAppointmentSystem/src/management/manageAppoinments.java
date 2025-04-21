@@ -646,7 +646,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 ResultSet rs = cstmt.executeQuery();
                 if(rs.next()){
                 String output = rs.getString("status");
-                System.out.println("Status from DB: " + output);  // Check the output from DB
+                System.out.println("Status from DB: " + output); 
                 if(output.equals("W move: Appointment created successfully")){
                     if(custom){
                         JOptionPane.showMessageDialog(rootPane, "This customer's appointment is booked!!!", "Added to Appointments", INFORMATION_MESSAGE);
@@ -659,6 +659,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
             }      
             pendings();
             comboboxes();
+            loadAppointments(1);
         } catch (SQLException ex) {
             Logger.getLogger(manageAppoinments.class.getName()).log(Level.SEVERE, null, ex);
         }

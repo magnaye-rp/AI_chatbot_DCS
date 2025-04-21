@@ -670,7 +670,18 @@ public class manageDentists extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jTextField1FocusLost
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+        try(Connection conn = Database.getConnection();
+             CallableStatement call = conn.prepareCall("CALL AddDentist(?,?);")){
+            call.setString(1, jTextField2.getText());
+            call.setString(2, jTextField1.getText());
+            call.executeQuery();
+            newDentist.dispose();
+            loadDentist();
+            performanceOverview();
+            dentistRevenue();
+        } catch (SQLException ex) {
+            Logger.getLogger(manageDentists.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void editNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_editNumFocusGained
@@ -690,7 +701,7 @@ public class manageDentists extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_editNameFocusLost
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (!current_name.equals(editName.getText()) && !current_num.equals(editNum.getText())) { 
+        if (!current_name.equals(editName.getText()) || !current_num.equals(editNum.getText())) { 
             String upd;
             boolean passwordChanged = !(passwordfield.getText().equals("remain empty if no changes needed"));
 
@@ -718,9 +729,15 @@ public class manageDentists extends javax.swing.JInternalFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(manageDentists.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            System.out.println("not gunna happen");
+            System.out.println(current_name);
         }
 
         editDentist.dispose();
+        loadDentist();
+        performanceOverview();
+        dentistRevenue();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void passwordfieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordfieldFocusLost
