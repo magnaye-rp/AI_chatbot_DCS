@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package chart;
 
 import org.jfree.chart.ChartFactory;
@@ -17,6 +13,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
+import org.jfree.chart.axis.CategoryLabelPositions;
 
 public class VerticalBarChart extends JPanel implements Serializable {
 
@@ -50,9 +47,11 @@ public class VerticalBarChart extends JPanel implements Serializable {
         plot.setRangeGridlinePaint(white);
 
         CategoryAxis domainAxis = plot.getDomainAxis();
-        ValueAxis rangeAxis = plot.getRangeAxis();
         domainAxis.setLabelPaint(white);
         domainAxis.setTickLabelPaint(white);
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+
+        ValueAxis rangeAxis = plot.getRangeAxis();
         rangeAxis.setLabelPaint(white);
         rangeAxis.setTickLabelPaint(white);
 

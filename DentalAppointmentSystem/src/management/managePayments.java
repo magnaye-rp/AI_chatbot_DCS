@@ -15,6 +15,8 @@ import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -31,30 +33,75 @@ public class managePayments extends javax.swing.JInternalFrame {
         initMethods();
     }
     
-//    void loadChart() {
-//        String call = "CALL getServiceRevenueMonth();";
-//
-//        try (Connection conn = Database.getConnection();
-//             CallableStatement stmt = conn.prepareCall(call)) {
-//
-//            ResultSet rs = stmt.executeQuery();
-//
-//            verticalBarChart.clear();
-//            verticalBarChart.setChartTitle("Monthly Revenue Per Service");
-//            verticalBarChart.setAxisLabels("Service", "Revenue (PHP)");
-//
-//            while (rs.next()) {
-//                String serviceName = rs.getString("name");
-//                double revenue = rs.getDouble("total_revenue");
-//
-//                verticalBarChart.addValue(revenue, "Revenue", serviceName);
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    void loadChart() {
+        String call = "CALL getServiceRevenueMonth();";
+        double totalRevenue = 0.0; 
 
+        try (Connection conn = Database.getConnection();
+             CallableStatement stmt = conn.prepareCall(call)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            verticalBarChart.clear();
+            verticalBarChart.setAxisLabels("Service", "Revenue (PHP)");
+
+            while (rs.next()) {
+                String serviceName = rs.getString("name");
+                double revenue = rs.getDouble("total_revenue");
+
+                verticalBarChart.addValue(revenue, "Revenue", serviceName);
+                totalRevenue += revenue;
+            }
+
+            String chartTitle = "Monthly Revenue Per Service - Total: PHP " + totalRevenue;
+            verticalBarChart.setChartTitle(chartTitle);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void loadTables(){
+        String query = "SELECT * FROM all_payments;";
+        String call = "CALL getUnpaid()";
+        try(Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             CallableStatement cs = conn.prepareCall(call)){
+            
+            ResultSet prs = ps.executeQuery();
+            ResultSet crs = cs.executeQuery();
+            DefaultTableModel model = (DefaultTableModel) payments.getModel();
+            model.setRowCount(0);
+            
+            while(prs.next()){
+                String d_name = prs.getString("dentist");
+                String p_name = prs.getString("patient");
+                String s_name = prs.getString("service_name");
+                float cost = prs.getFloat("service_cost");
+                String amount = String.format("%.2f",cost);
+                Timestamp time = prs.getTimestamp("time_paid");
+                model.addRow(new Object []{d_name,p_name,s_name,amount,time});
+            }
+            
+            model = (DefaultTableModel) toBePaid.getModel();
+            model.setRowCount(0);
+            while(crs.next()){
+                String id = crs.getString("job_id");
+                String d_name = crs.getString("dentist");
+                String p_name = crs.getString("patient");
+                String s_name = crs.getString("service_name");
+                float cost = crs.getFloat("service_cost");
+                String amount = String.format("%.2f",cost);
+                
+                model.addRow(new Object []{id, d_name,p_name,s_name,amount});
+            }
+            
+        
+        }catch (SQLException ex) {
+            Logger.getLogger(managePayments.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -71,10 +118,11 @@ public class managePayments extends javax.swing.JInternalFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        toBePaid = new javax.swing.JTable();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel5 = new javax.swing.JLabel();
+        verticalBarChart = new chart.VerticalBarChart();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -118,6 +166,11 @@ public class managePayments extends javax.swing.JInternalFrame {
         jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("PAYMENT DONE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -162,6 +215,7 @@ public class managePayments extends javax.swing.JInternalFrame {
         jPanel3.setBounds(920, 0, 270, 50);
 
         payments.setBackground(new java.awt.Color(57, 62, 70));
+        payments.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         payments.setForeground(new java.awt.Color(255, 255, 255));
         payments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -212,16 +266,18 @@ public class managePayments extends javax.swing.JInternalFrame {
         });
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(20, 50, 850, 700);
+        jScrollPane1.setBounds(20, 50, 850, 710);
         jPanel1.add(jSeparator1);
         jSeparator1.setBounds(10, 20, 1640, 10);
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator2);
-        jSeparator2.setBounds(880, 30, 10, 730);
+        jSeparator2.setBounds(880, 30, 10, 740);
 
-        jTable1.setBackground(new java.awt.Color(57, 62, 70));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        toBePaid.setBackground(new java.awt.Color(57, 62, 70));
+        toBePaid.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        toBePaid.setForeground(new java.awt.Color(255, 255, 255));
+        toBePaid.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -240,22 +296,40 @@ public class managePayments extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(30, 30, 59));
-        jTable1.setRowHeight(30);
-        jTable1.setShowGrid(true);
-        jScrollPane2.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        toBePaid.setFillsViewportHeight(true);
+        toBePaid.setGridColor(new java.awt.Color(30, 30, 59));
+        toBePaid.setRowHeight(30);
+        toBePaid.setShowGrid(true);
+        jScrollPane2.setViewportView(toBePaid);
+        if (toBePaid.getColumnModel().getColumnCount() > 0) {
+            toBePaid.getColumnModel().getColumn(0).setResizable(false);
+            toBePaid.getColumnModel().getColumn(1).setResizable(false);
+            toBePaid.getColumnModel().getColumn(2).setResizable(false);
+            toBePaid.getColumnModel().getColumn(3).setResizable(false);
+            toBePaid.getColumnModel().getColumn(4).setResizable(false);
         }
+        JTableHeader header1= toBePaid.getTableHeader();
+        header1.setFont(new Font("Helvetica Neue", Font.BOLD, 18));
+        header1.setForeground(Color.WHITE);
+        header1.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                boolean hasFocus, int row, int column) {
+                JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                label.setBackground(Color.decode("#1B262C"));
+                label.setForeground(Color.WHITE);
+                label.setFont(new Font("Helvetica Neue", Font.BOLD, 18));
+                label.setOpaque(true);
+                label.setHorizontalAlignment(CENTER);
+                return label;
+            }
+        });
+        toBePaid.getColumnModel().removeColumn(toBePaid.getColumnModel().getColumn(0));
 
         jPanel1.add(jScrollPane2);
         jScrollPane2.setBounds(900, 60, 740, 150);
         jPanel1.add(jSeparator3);
-        jSeparator3.setBounds(730, 320, 50, 10);
+        jSeparator3.setBounds(730, 320, 0, 3);
         jPanel1.add(jSeparator4);
         jSeparator4.setBounds(900, 240, 750, 10);
 
@@ -264,6 +338,8 @@ public class managePayments extends javax.swing.JInternalFrame {
         jLabel5.setText("REVENUE REPORT THIS MONTH");
         jPanel1.add(jLabel5);
         jLabel5.setBounds(900, 260, 380, 30);
+        jPanel1.add(verticalBarChart);
+        verticalBarChart.setBounds(900, 320, 740, 440);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -276,6 +352,10 @@ public class managePayments extends javax.swing.JInternalFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -293,12 +373,14 @@ public class managePayments extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable payments;
+    private javax.swing.JTable toBePaid;
+    private chart.VerticalBarChart verticalBarChart;
     // End of variables declaration//GEN-END:variables
     void initMethods(){
         javax.swing.plaf.basic.BasicInternalFrameUI UI = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
         UI.setNorthPane(null);
-        //loadChart();
+        loadChart();
+        loadTables();
     }
 }
