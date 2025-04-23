@@ -1,80 +1,161 @@
 {
 "intents": [
 {
-"tag": "greeting",
-"patterns": ["hello", "hi", "hey", "morning", "afternoon", "yo", "sup", "good evening", "howdy", "hiya", "greetings", "salutations", "what’s up", "how’s it going", "hello there", "hi friend", "hey buddy", "good day", "peace", "what’s good"],
-"responses": ["Hello! How can I assist you today?", "Hi there! How can I help?", "Hey! Hope you're having a great day.", "Greetings! What can I do for you?", "Hello! How's your day going?", "Hi! Need any help today?", "Hey there! What brings you here?", "Howdy! How’s everything?", "Good to see you! How can I be of service?", "Hello there! What’s on your mind?"]
+    "tag": "greeting",
+    "patterns": ["hello", "hi", "hey", "morning", "afternoon", "yo", "sup", "good evening", "howdy", "hiya", "greetings", "salutations", "what’s up", "how’s it going", "hello there", "hi friend", "hey buddy", "good day", "peace", "what’s good", "hey there", "hiya pal", "how’s life", "long time no see", "how you doing", "yo yo", "hey man", "hi mate", "top of the morning", "yo fam"],
+    "responses": ["Hello! How can I assist you today?", "Hi there! How can I help?", "Hey! Hope you're having a great day.", "Greetings! What can I do for you?", "Hello! How's your day going?", "Hi! Need any help today?", "Hey there! What brings you here?", "Howdy! How’s everything?", "Good to see you! How can I be of service?", "Hello there! What’s on your mind?", "Hey friend! What can I do for you today?", "Hi! Let me know how I can help.", "Salutations! How may I assist?", "Yo! Everything cool?", "Peace! What’s up?", "Hiya! What brings you in today?", "Hey hey! How can I support you?", "Hello, my friend! Need a hand?", "Good day! How can I help you out?", "Hey there, what’s the vibe today?"]
+  },
+{
+    "tag": "thanks",
+    "patterns": ["thanks", "thank you", "thx", "ty", "appreciate it", "grateful", "many thanks", "thanks a lot", "big thanks", "thank you so much", "I appreciate you", "thank you kindly", "much obliged", "deepest thanks", "thanks a bunch", "massive thanks", "cheers", "thank you tons", "thanks a million", "sincerely thank you", "endless thanks", "a big thank you", "thank you endlessly", "bless you", "so thankful", "forever grateful", "truly appreciate it", "can't thank you enough", "infinite thanks", "eternal thanks", "with gratitude", "so grateful", "immense gratitude", "warmest thanks", "thanks heaps", "mega thanks", "overwhelming thanks", "heartfelt thanks", "mad appreciation", "highly appreciate it", "thank you loads", "loads of thanks", "thank you a ton", "big time thanks", "much respect", "so much thanks", "endless appreciation", "thank ya", "mad thanks", "props", "thank you endlessly", "total thanks", "full appreciation", "utmost thanks", "thankful for you", "so appreciative", "maximum gratitude", "I’m so grateful", "really appreciate this", "thanks very much", "a ton of thanks", "I owe you one", "respect and thanks"],
+    "responses": ["You're very welcome!", "Happy to help!", "Anytime! Let me know if you need anything else.", "Glad I could assist!", "You're welcome! Let me know if you have more questions.", "It was my pleasure!", "I’m happy to help anytime!", "You got it!", "No problem at all!", "Always here to help!", "Of course! Let me know if you need anything else.", "My pleasure entirely!", "You're most welcome!", "Don’t mention it!", "Always glad to support you!", "That’s what I’m here for!", "No worries at all!", "It's the least I could do!", "Thank *you*!", "All good, happy to be of help!", "Cheers to that!", "Much love and anytime!", "Glad I was useful!", "Always ready to help!", "You're in good hands!", "A pleasure to help!", "Just doing my job!", "All in a day’s work!", "Consider it done!", "Always available if you need more!", "You bet!", "Sure thing!", "Yes sir/ma'am, anytime!", "That’s easy – I’ve got your back!", "You’re covered!", "That’s what I like to do!", "Grateful for your words!", "Appreciation received and returned!", "I'm always here to assist!", "Let’s keep it going! Reach out whenever!", "Here to help, anytime you need me!", "Super happy I could help!", "Sending help and good vibes always!", "You're awesome—thank *you*!", "Really glad I could make it easier for you!", "Peace and support always!", "Nothing to it!", "Helping is what I do best!", "Right back at ya!"]
+  },
+{
+    "tag": "appointment",
+    "patterns": [
+      "appointment", "book a visit", "schedule", "checkup", "reserve a slot", "make an appointment", "I need a dental checkup", "book a cleaning", "can I schedule a visit?", "dentist appointment", "fix a visit", "set up a meeting", "can I come in?", "need to book a slot", "I'd like to schedule something", "how do I book an appointment?", "schedule a cleaning", "I want to see the dentist", "I need to book a time", "can I get an appointment?", "set a time to visit", "I'd like to come in", "need to reserve a time", "schedule an appointment", "is there availability?", "I'd like a checkup slot", "schedule me in", "can I get a slot?", "I need to book a visit", "I'd like to make an appointment", "book me in for a checkup", "how can I get a visit?", "can I see someone today?", "I'd like to come by", "is there time today?", "I need a cleaning appointment", "please book me", "I'd like to drop by", "I need a slot for dental care", "how to get an appointment?", "I want to come for a consultation", "book my visit", "make my appointment", "I'd like to come in this week", "please reserve a time", "schedule me for next week", "how to arrange a visit?", "get me in the schedule", "can you book me in?", "dental visit", "I'd like to arrange something", "do you have time today?", "is a visit possible?", "I need a quick check", "slot for teeth cleaning", "when can I come in?", "can I walk in?", "I'd like to see the doctor", "set an appointment", "book me for next Friday", "I'm due for a visit", "can I arrange a session?", "can you check availability?", "help me book a time"
+    ],
+    "responses": [
+      "Sure! What date and time work best for you?",
+      "I can schedule that for you. Do you have a preferred time?",
+      "Please provide your preferred date and time, and we’ll check availability.",
+      "We’d be happy to schedule your appointment. When would you like to come in?",
+      "Let me check the available slots for you. Can you specify a date and time?",
+      "Our team is ready to assist you! Just let us know your preferred schedule.",
+      "We offer flexible timings. What day and time work for you?",
+      "Absolutely! Just tell me when you'd like to visit.",
+      "I'm here to help schedule your visit—when are you free?",
+      "Let's book that checkup! What day works best for you?",
+      "You got it! Tell me a convenient time and we'll lock it in.",
+      "Happy to arrange your appointment. Just let me know the timing!",
+      "Would you prefer a morning or afternoon slot?",
+      "No problem! We’ll get you scheduled. When are you available?",
+      "Thanks for reaching out—let’s find the right time for your visit.",
+      "I can help with that! Any specific date in mind?",
+      "We’ll do our best to fit you in. When would you like to come?",
+      "The calendar’s open! What date works for you?",
+      "Let’s get your appointment confirmed. Just need a date and time.",
+      "We’ll take care of it! Just tell us when you’re available.",
+      "Let me pull up our calendar—do you have a day in mind?",
+      "I can help you get that scheduled right away. Just share your preferred time.",
+      "Looking forward to seeing you! When should we expect you?",
+      "I’ll check with the team and confirm your slot—what time are you thinking?",
+      "Need to get in soon? Just tell me your availability.",
+      "Let's make it official—what day should we set your visit for?",
+      "We’ve got room! When would you like to swing by?",
+      "Let’s pencil you in. Morning, afternoon, or evening?",
+      "Time to get that checkup scheduled! What day’s best?",
+      "Of course! Let’s get that on the calendar—what time suits you?",
+      "We'll get everything sorted. Just drop your preferred day and time.",
+      "Got it! Do mornings or afternoons work better for you?"
+    ]
+  },
+{
+    "tag": "services",
+    "patterns": [
+      "services", "what do you offer", "available treatments", "dental care options", "cosmetic dentistry", "what dental work do you do", "do you do braces?", "teeth cleaning services", "root canal", "dental implants", "fillings and cavities", "orthodontics", "veneers", "tooth extraction", "what kind of procedures?", "can I get whitening?", "do you do x-rays?", "consultation service", "braces available?", "dental checkup", "tooth repair", "extraction service","what are the things you do?",
+      "tell me the services offered here",
+      "what kind of dental work do you perform?",
+      "do you offer teeth implants?",
+      "can I get my teeth cleaned here?",
+      "is a consultation available?",
+      "do you provide any cosmetic procedures?",
+      "what about fillings?",
+      "can you do a root canal?",
+      "are braces an option?",
+      "do you offer extractions?",
+      "tell me about your cleaning service",
+      "what types of treatments are available?",
+      "can I get a check-up?",
+      "do you work on cavities?"
+    ],
+    "responses": [
+      "Here’s what we offer: Consultation, Dental X-Ray, Dental Cleaning, Tooth Filling, Tooth Extraction, Braces Adjustment, Teeth Whitening, and Root Canal Treatment. How can I assist you?",
+      "Our clinic provides a wide range of services like cleanings, x-rays, fillings, braces, whitening, and root canals. Need help with a specific one?",
+      "We handle everything from basic dental checkups to specialized treatments like braces, whitening, and root canals. What would you like to know more about?",
+      "Yes, we offer general and cosmetic dentistry: cleanings, extractions, fillings, braces, whitening, x-rays, and more. Let me know what you're interested in.",
+      "From Consultation to Root Canal Treatment, we've got your dental needs covered. Want details on any service?"
+    ]
+  },
+{
+    "tag": "pricing",
+    "patterns": [
+      "pricing", "cost", "how much", "insurance", "payment options", "fees", "price for braces", "how much for whitening", "is consultation free?", "do you accept payment plans?", "what are your rates?", "how expensive is a visit?", "what's the cost for cleaning?", "tooth filling price", "dental x-ray cost", "root canal cost", "price for extraction", "cost of dental services", "treatment pricing","what's the cost of a checkup?",
+      "how much do fillings cost?",
+      "tell me about the price of cleaning",
+      "what are your consultation fees?",
+      "how much for an x-ray?",
+      "braces cost?",
+      "is there a fee for tooth removal?",
+      "what's the price range for your services?",
+      "do you have a price list?",
+      "how much is teeth whitening?",
+      "what's the cost of a root canal treatment?",
+      "are there any hidden fees?",
+      "can you give me an estimate?",
+      "what are the payment methods you accept?",
+      "does insurance cover any of the costs?","what about prices"
+    ],
+    "responses": [
+      "Here’s a quick breakdown:\n- Consultation: ₱500 (30 min)\n- Dental X-Ray: ₱800 (30 min)\n- Dental Cleaning: ₱1000 (45 min)\n- Tooth Filling: ₱1200 (40 min)\n- Tooth Extraction: ₱1500 (60 min)\n- Braces Adjustment: ₱2000 (30 min)\n- Teeth Whitening: ₱4000 (90 min)\n- Root Canal Treatment: ₱5000 (120 min)\nWould you like to book something?",
+      "Pricing varies by treatment. For example, cleanings are ₱1000, and root canals are ₱5000. Want info on a specific service?",
+      "Consultations are just ₱500, and we offer flexible payment options and accept most insurance. Need a price check on something?",
+      "Yes, we do accept payment plans and insurance coverage. I can help you with specifics—what procedure are you planning?",
+      "Each service has a set price—let me know which one you need and I’ll share the exact cost."
+    ]
+  },
+{
+  "tag": "hours",
+  "patterns": [
+    "hours", "when are you open", "closing time", "operating hours", "clinic hours",
+    "are you open today?", "what time do you close?", "weekend hours",
+    "holiday schedule", "opening hours", "walk-in hours", "are you open now?",
+    "when do you start?", "can I come in the morning?", "do you open early?",
+    "what time do you open on Saturday?","what are your business hours?",
+      "when are you available?",
+      "what time do you open and close?",
+      "are you open on Sundays?",
+      "what are your hours on a weekday?",
+      "is the clinic open late?",
+      "can I come in after 5 PM?",
+      "what time do you start seeing patients?",
+      "are you open during lunch hours?",
+      "what's your schedule like?",
+      "do you have evening appointments?",
+      "what time do you close on Saturdays?",
+      "are you open on public holidays?",
+      "can I book an appointment outside regular hours?",
+      "what are your typical working days?"
+  ],
+  "responses": [
+    "Our clinic is open from 7 AM to 5 PM, Monday to Saturday. Walk-ins are welcome!",
+    "We’re open Monday to Saturday, 7 AM to 5 PM, and yes, we do accept walk-ins!",
+    "Operating hours are 7 AM to 5 PM, Monday through Saturday. Let me know if you'd like to stop by.",
+    "We’re happy to help Monday to Saturday from 7 AM to 5 PM. You can walk in or book ahead!",
+    "The clinic is open 7 AM to 5 PM, Monday through Saturday. Closed on Sundays. Come by anytime!",
+    "Yes, we accept walk-ins! We’re open from 7 in the morning to 5 in the evening, Monday to Saturday.",
+    "Weekday and Saturday hours are 7 AM to 5 PM. Walk-ins are totally fine—just drop by!",
+    "Feel free to walk in anytime between 7 AM and 5 PM, Monday to Saturday. We're here for you!"
+  ]
 },
 {
-"tag": "thanks",
-"patterns": ["thanks", "thank you", "thx", "ty", "appreciate it", "grateful", "many thanks", "thanks a lot", "big thanks", "thank you so much", "I appreciate you", "thank you kindly", "much obliged", "deepest thanks"],
-"responses": ["You're very welcome!", "Happy to help!", "Anytime! Let me know if you need anything else.", "Glad I could assist!", "You're welcome! Let me know if you have more questions.", "It was my pleasure!", "I’m happy to help anytime!", "You got it!", "No problem at all!", "Always here to help!"]
-},
-{
-"tag": "appointment",
-"patterns": ["appointment", "book a visit", "schedule", "checkup", "reserve a slot", "make an appointment", "I need a dental checkup", "book a cleaning", "can I schedule a visit?", "dentist appointment", "fix a visit", "set up a meeting", "can I come in?"],
-"responses": [
-"Sure! What date and time work best for you?",
-"I can schedule that for you. Do you have a preferred time?",
-"Please provide your preferred date and time, and we’ll check availability.",
-"We’d be happy to schedule your appointment. When would you like to come in?",
-"Let me check the available slots for you. Can you specify a date and time?",
-"Our team is ready to assist you! Just let us know your preferred schedule.",
-"We offer flexible timings. What day and time work for you?"
-]
-},
-{
-"tag": "services",
-"patterns": ["services", "what do you offer", "available treatments", "dental care options", "cosmetic dentistry", "what dental work do you do", "do you do braces?", "teeth cleaning services", "root canal", "dental implants", "fillings and cavities", "orthodontics", "veneers", "tooth extraction"],
-"responses": [
-"Yes! We offer general dentistry, teeth cleaning, whitening, braces, implants, and cosmetic procedures. How can I assist you?",
-"Our services include preventive care, restorative treatments, orthodontics, and more. What do you need help with?",
-"We provide a variety of dental treatments, from cleanings to full smile makeovers. What are you looking for?",
-"Whether you need a routine checkup or a specialized treatment, we have you covered. How can I help?",
-"We offer a full range of dental services including emergency care, pediatric dentistry, and gum treatments. Let us know what you need!"
-]
-},
-{
-"tag": "pricing",
-"patterns": ["pricing", "cost", "how much", "insurance", "payment options", "fees", "price for braces", "how much for whitening", "is consultation free?", "do you accept payment plans?", "what are your rates?", "how expensive is a visit?"],
-"responses": [
-"Pricing depends on the procedure. Would you like me to provide an estimate?",
-"Yes, we accept most insurance providers. Can you share which one you have?",
-"Our consultation fees vary, but we do offer free initial assessments for certain procedures.",
-"I can provide an estimated cost based on the treatment you’re interested in. Could you specify the procedure?",
-"We have flexible payment options. Would you like more details?",
-"Different procedures come with different costs. Let me know what service you need pricing for!",
-"We accept various insurance plans and have financing options available. How can I assist?"
-]
-},
-{
-"tag": "hours",
-"patterns": ["hours", "when are you open", "closing time", "operating hours", "clinic hours", "are you open today?", "what time do you close?", "weekend hours", "holiday schedule"],
-"responses": [
-"Our clinic is open from 9 AM to 6 PM, Monday to Saturday. Would you like to book an appointment?",
-"We’re open Monday to Saturday from 9 AM to 6 PM. Let me know how I can help!",
-"Our hours of operation are 9 AM to 6 PM, Monday through Saturday. How can I assist you?",
-"We’re closed on Sundays but open on weekdays and Saturdays from 9 AM to 6 PM. Do you need an appointment?",
-"Our hours vary during holidays. Would you like to check a specific date?"
-]
-},
-{
-"tag": "fallback",
-"patterns": ["unknown", "help", "assist", "confused", "question", "not sure", "what do I do?", "I don’t understand", "explain please", "need assistance"],
-"responses": [
-"I'm not sure I understand. Can you rephrase?",
-"I didn't quite get that. Could you provide more details?",
-"I’m here to help! Could you clarify your question?",
-"I’m sorry, I don’t have an answer for that. Could you try asking differently?",
-"Let’s figure it out together! Can you give me more details?"
-]
-},
-{
-"tag": "aw",
-"patterns": ["aw"],
-"responses": [
-"aw"
-]
+  "tag": "fallback",
+  "patterns": [
+    "unknown", "help", "assist", "confused", "question", "not sure", "what do I do?", "I don’t understand",
+    "explain please", "need assistance", "what does that mean?", "pardon?", "can you repeat that?",
+    "unclear", "don’t get it", "I need help", "sorry, what?", "can you say that again?",
+    "what should I do now?", "not making sense", "this is confusing", "elaborate please"
+  ],
+  "responses": [
+    "I'm not sure I understand. Could you rephrase or be more specific?",
+    "I didn’t quite get that—could you provide more details or ask in another way?",
+    "I’m here to help! Can you clarify your question a bit more?",
+    "Sorry, I don’t have an answer for that right now. Try asking differently?",
+    "Let’s figure it out together! Just tell me a bit more about what you're looking for.",
+    "Could you reword that for me? I’ll do my best to assist.",
+    "I'm not quite sure what you mean. Want to try rephrasing it?",
+    "Still here to help—just need a little more detail to understand your question!"
+  ]
 }
 ]
 }
