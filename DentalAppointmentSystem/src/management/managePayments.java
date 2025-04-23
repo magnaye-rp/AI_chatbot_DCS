@@ -11,18 +11,10 @@ import javax.swing.table.*;
 import staff.Database;
 import java.sql.*;
 import java.sql.CallableStatement;
-import java.util.Random;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 
-
-/**
- *
- * @author magnaye.rp
- */
 public class managePayments extends javax.swing.JInternalFrame {
 
     /**
@@ -354,7 +346,32 @@ public class managePayments extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        int row = toBePaid.getSelectedRow();
+        if (row != -1) {
+            String value = toBePaid.getModel().getValueAt(toBePaid.convertRowIndexToModel(row), 0).toString();
+            String query = "CALL doPay(?);";
+            try (Connection conn = Database.getConnection();
+                CallableStatement cs = conn.prepareCall(query)) {
+
+                cs.setString(1, value);
+                ResultSet  rs = cs.executeQuery();
+                if(rs.next()){
+                    String output = rs.getString("status");
+                
+                    if(output.equals("Payment Successful")){
+                        JOptionPane.showMessageDialog(rootPane, "Payment Successfull", "Status", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(manageDentists.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }else{
+            JOptionPane.showMessageDialog(null, "Please Select a Row");
+        }
+        loadChart();
+        loadTables();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

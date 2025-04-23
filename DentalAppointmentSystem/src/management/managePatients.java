@@ -163,8 +163,6 @@ public class managePatients extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
-        jPanel5 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         jTextField1 = new javax.swing.JTextField();
@@ -445,38 +443,6 @@ public class managePatients extends javax.swing.JInternalFrame {
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator2);
         jSeparator2.setBounds(827, 20, 10, 410);
-
-        jPanel5.setBackground(new java.awt.Color(34, 40, 49));
-
-        jButton3.setBackground(new java.awt.Color(0, 173, 181));
-        jButton3.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("DELETE");
-        jButton3.setBorderPainted(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 10, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel5);
-        jPanel5.setBounds(560, 430, 120, 40);
 
         jButton1.setBackground(new java.awt.Color(0, 173, 181));
         jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
@@ -803,28 +769,6 @@ public class managePatients extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_editNumActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         int row = patients.getSelectedRow();
-        if (row != -1) {
-            String value = patients.getModel().getValueAt(patients.convertRowIndexToModel(row), 0).toString();
-            String query = "UPDATE patient SET status = 'deleted' WHERE patient_id = ?";
-            try (Connection conn = Database.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)) {
-
-                ps.setString(1, value);
-                ps.executeUpdate();
-
-            } catch (SQLException ex) {
-                Logger.getLogger(manageDentists.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }else{
-            JOptionPane.showMessageDialog(null, "Please Select a Row");
-        }
-        loadCharts();
-        loadTables();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String sql = "CALL newPatient(?,?,?)";
         try (Connection conn = Database.getConnection();
@@ -899,7 +843,6 @@ public class managePatients extends javax.swing.JInternalFrame {
     private javax.swing.JTable history;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -917,7 +860,6 @@ public class managePatients extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
