@@ -4,19 +4,19 @@ import datetime
 from datetime import date, timedelta
 from dateutil import parser as date_parser
 from functools import wraps
-import pytz  # For timezone handling
-from database_connector import execute_booking
+import logging
+logging.basicConfig(level=logging.DEBUG)
+from database_connector import execute_booking # Ensure this is correctly implemented
 
 app = Flask(__name__)
 api = Api(app)
 
-# Configuration
 TIME_FORMAT = '%I:%M %p'
+MYSQL_TIME_FORMAT = '%H:%M:%S'  # Format expected by MySQL TIME column
 DATE_FORMATS = ['%Y-%m-%d', '%B %d', '%b %d', '%A', 'tomorrow']
 WORKING_HOURS = (7, 17)
 APPOINTMENT_DURATION = 30
 
-# Store API keys (In production, use a proper database and hashing)
 API_KEYS = {
     "chatbot123": {"user_id": 123, "name": "Chatbot User"},
     "testkey456": {"user_id": 456, "name": "Test User"}
@@ -33,9 +33,8 @@ VALID_SERVICES = {
     "Dental X-Ray": 15
 }
 
-
 def authenticate_request(func):
-
+    """Decorator to authenticate API requests using an API key."""
     @wraps(func)
     def wrapper(*args, **kwargs):
         api_key = request.headers.get('X-API-Key')
@@ -46,12 +45,10 @@ def authenticate_request(func):
 
     return wrapper
 
-
 def validate_time(time_str):
     try:
         time_obj = datetime.datetime.strptime(time_str, TIME_FORMAT).time()
 
-        # Check if within working hours
         if not (WORKING_HOURS[0] <= time_obj.hour < WORKING_HOURS[1]):
             return None, "Outside working hours (7 AM - 5 PM)"
 
@@ -65,15 +62,12 @@ def validate_date(date_str):
         if date_str.lower() == "tomorrow":
             return date.today() + timedelta(days=1), None
 
-        # Try parsing with dateutil which handles many formats
         date_obj = date_parser.parse(date_str).date()
 
-        # Check if date is in the past
         if date_obj < date.today():
             return None, "Date cannot be in the past"
 
-        # Check if weekday (Mon-Fri)
-        if date_obj.weekday() >= 6:  # 5=Saturday, 6=Sunday
+        if date_obj.weekday() >= 6:
             return None, "We're closed on Sundays"
 
         return date_obj, None
@@ -84,14 +78,16 @@ def validate_date(date_str):
 class BookAppointment(Resource):
     @authenticate_request
     def post(self):
-        # Request argument parsing
         parser = reqparse.RequestParser()
         parser.add_argument('intent', type=str, required=True, help="Intent must be specified")
         parser.add_argument('date', type=str, required=True, help="Date is required")
         parser.add_argument('time', type=str, required=True, help="Time is required")
         parser.add_argument('service', type=str, required=True, help="Service type is required")
-        parser.add_argument('patient_id', type=int, required=True, help="Patient ID is required")  # <-- Add patient_id
+        parser.add_argument('patient_id', type=int, required=True, help="Patient ID is required")
         args = parser.parse_args()
+
+        # Log the parsed arguments
+        logging.debug(f"BookAppointment.post: Parsed arguments: {args}")
 
         # Validate service
         service = args['service'].title()
@@ -111,37 +107,57 @@ class BookAppointment(Resource):
             return {"message": time_error}, 400
 
         # Check appointment duration fits before closing
-        end_time = (datetime.datetime.combine(date_obj, time_obj) +
-                    timedelta(minutes=VALID_SERVICES[service])).time()
-        if end_time.hour >= WORKING_HOURS[1]:
+        duration = VALID_SERVICES[service]  # Get duration from VALID_SERVICES
+        end_time = datetime.datetime.combine(date_obj, time_obj) + timedelta(minutes=duration)
+        if end_time.time().hour >= WORKING_HOURS[1]:
+            closing_time = f"{WORKING_HOURS[1]}:00 PM" if WORKING_HOURS[1] >= 12 else f"{WORKING_HOURS[1]}:00 AM"
+            latest_start = (datetime.datetime.combine(date_obj, datetime.time(WORKING_HOURS[1], 0)) - timedelta(minutes=duration)).time()
             return {
-                "message": f"This service requires {VALID_SERVICES[service]} minutes. "
-                           f"Please choose an earlier time slot."
+                "message": (
+                    f"This {service} requires {duration} minutes. Our clinic closes at {closing_time}. "
+                    f"Please choose a time before {latest_start.strftime('%I:%M %p')} for this service."
+                ),
+                "max_start_time": latest_start.strftime('%I:%M %p'),
+                "service_duration": duration,
+                "closing_time": closing_time
             }, 400
 
-        # Here we need to use patient_id instead of user_id
-        patient_id = args['patient_id']  # <-- Use patient_id from the payload
+        # Format the time for MySQL
+        mysql_time_str = time_obj.strftime(MYSQL_TIME_FORMAT)
+        logging.debug(f"BookAppointment.post: Calling execute_booking with pt_id={args['patient_id']}, date_={date_obj.isoformat()}, time_={mysql_time_str}, service={service}")
 
-        # Call the database connector to book the appointment using patient_id
-        result = execute_booking(patient_id, date_obj.isoformat(), time_obj.strftime(TIME_FORMAT), service)
+        # Execute booking
+        try:
+            logging.debug(f"BookAppointment.post: Calling execute_booking with patient_id={args['patient_id']}, date={date_obj.isoformat()}, time={mysql_time_str}, service={service}")
+            result = execute_booking(
+                pt_id=args['patient_id'],
+                date_=date_obj.isoformat(),
+                time_=mysql_time_str,
+                service=service
+            )
+            logging.debug(f"BookAppointment.post: execute_booking result: {result}")
 
-        if result['status'] == 'error':
-            return {"message": result['message']}, 500
-        else:
-            appointment_details = {
-                "patient_id": patient_id,  # <-- Make sure to return patient_id in the response
-                "date": date_obj.isoformat(),
-                "time": time_obj.strftime(TIME_FORMAT),
-                "service": service,
-                "status": "booked"
-            }
+            if result.get('status') == 'error':
+                return {"message": result['message']}, 400
+
+            # Return consistent response format
             return {
                 "message": "Appointment booked successfully",
-                "appointment": appointment_details
+                "appointment": {
+                    "patient_id": args['patient_id'],
+                    "date": date_obj.isoformat(),
+                    "time": time_obj.strftime(TIME_FORMAT), # Keep original format in response
+                    "service": service,
+                    "duration": duration,
+                    "status": "booked",
+                    "confirmation_id": result.get('confirmation_id', 'N/A')
+                }
             }, 200
 
+        except Exception as e:
+            logging.error(f"BookAppointment.post: Exception during booking: {e}")
+            return {"message": f"Booking failed: {str(e)}"}, 500
 
-# Add the BookAppointment resource to the API
 api.add_resource(BookAppointment, "/book_appointment")
 
 if __name__ == '__main__':

@@ -10,7 +10,6 @@ import re
 from datetime import datetime
 from datetime import datetime, timedelta
 
-# Confidence Threshold
 CONFIDENCE_THRESHOLD = 0.6
 
 class Chatbot:
@@ -28,7 +27,7 @@ class Chatbot:
         # Load Label Encoder
         self.label_encoder = LabelEncoder()
         self.label_encoder.classes_ = np.load("label_encoder.npy", allow_pickle=True)
-        print("Label Encoder Classes:", self.label_encoder.classes_)  # Check the order of your classes
+        print("Label Encoder Classes:", self.label_encoder.classes_)
 
         # Load Training Data
         with open("training_data.json", "r") as file:
@@ -82,9 +81,7 @@ class Chatbot:
             match = re.search(pattern, text)
             if match:
                 time_str = f"{match.group(1)}:{match.group(2)} {match.group(3)}" if ":" in fmt else f"{match.group(1)} {match.group(2)}"
-                print(f"Original time extracted: {time_str}")  # Debug print
-                details["time"] = self.convert_to_12hr_format(time_str)  # Convert time format
-                print(f"Converted time: {details['time']}")  # Debug print
+                details["time"] = self.convert_to_12hr_format(time_str)
                 break
 
         self.services = {
@@ -103,7 +100,6 @@ class Chatbot:
                 details["service"] = service
                 break
 
-        print(f"Extracted details: {details}")
         return details
 
     def predict_intent(self, user_input):
@@ -116,7 +112,7 @@ class Chatbot:
         confidence = prediction[predicted_class_index]
         predicted_tag = self.label_encoder.inverse_transform([predicted_class_index])[0]
 
-        print(f"Raw prediction scores: {prediction}")
+        # print(f"Raw prediction scores: {prediction}") #debugger
         return predicted_tag, confidence
 
     def run(self):
@@ -130,12 +126,12 @@ class Chatbot:
                 if predicted_tag == "appointment":
                     print("Raw Prediction:", self.model.predict(
                         pad_sequences(self.tokenizer.texts_to_sequences([user_input.lower()]),
-                                      maxlen=self.model.input_shape[1], padding="post"))[0])  # Debug
-                    print("Confidence:", f"{confidence:.2f}")
+                                      maxlen=self.model.input_shape[1], padding="post"))[0])
+                    print("Confidence:", f"{confidence:.2f}") #debugger
                 else:
                     print("Raw Prediction:", self.model.predict(pad_sequences(self.tokenizer.texts_to_sequences([user_input.lower()]), maxlen=self.model.input_shape[1], padding="post"))[0])  # Debug
-                    print("Confidence:", f"{confidence:.2f}")  # Debug
-                    print("Predicted Intent:", predicted_tag)  # Debug
+                    print("Confidence:", f"{confidence:.2f}")
+                    print("Predicted Intent:", predicted_tag)
                     if confidence >= CONFIDENCE_THRESHOLD and predicted_tag in self.responses:
                         print("Bot:", np.random.choice(self.responses[predicted_tag]))
                     else:
@@ -147,21 +143,16 @@ class Chatbot:
             if predicted_tag == "appointment":
                 appointment_details = self.extract_appointment_details_easy(user_input)
 
-                # Check if we have enough details
                 required = ['date', 'time', 'service']
                 if all(k in appointment_details for k in required):
-                    # Proceed with booking
-                    api_url = "http://localhost:5001/book_appointment"
+                    api_url = "http://localhost:5000/book_appointment"
                     payload = {
                         "patient_id": self.user_id,
                         "intent": "book_appointment",
-                        "date": appointment_details["date"],  # Make sure this is in YYYY-MM-DD format
-                        "time": appointment_details["time"],  # Make sure this is in HH:MM format
+                        "date": appointment_details["date"],
+                        "time": appointment_details["time"],
                         "service": appointment_details["service"]
                     }
-
-                    # Log the payload for debugging
-                    print("Sending payload:", json.dumps(payload, indent=4))
 
                     headers = {
                         'X-API-Key': self.api_key,
@@ -172,7 +163,6 @@ class Chatbot:
                         print("Final Payload Sent to Server:")
                         print(json.dumps(payload, indent=4))
                         response = requests.post(api_url, json=payload, headers=headers)
-                        print("Response Status Code:", response.status_code)  # Check the status code
                         print("Response Content:", response.text)  # Check the full response
 
                         response.raise_for_status()
@@ -184,13 +174,21 @@ class Chatbot:
                             print("Bot: Response content:", e.response.text)
                 else:
                     missing = [k for k in required if k not in appointment_details]
-                    if 'service' in missing:
-                        print("Bot:", "Which service would you like? We offer: " +
-                              ", ".join(self.services.keys()))
+                    response_parts = ["Bot: "]
+
                     if 'date' in missing:
-                        print("Bot:", "What date would you like to come in?")
+                        response_parts.append("What date would you like to come in?")
                     if 'time' in missing:
-                        print("Bot:", "What time works best for you?")
+                        response_parts.append("What time works best for you?")
+                    if 'service' in missing:
+                        services = {"consultation": "Consultation", "tooth extraction": "Tooth Extraction",
+                                    "dental cleaning": "Dental Cleaning", "tooth filling": "Tooth Filling",
+                                    "root canal treatment": "Root Canal Treatment",
+                                    "braces adjustment": "Braces Adjustment", "teeth whitening": "Teeth Whitening",
+                                    "dental x-ray": "Dental X-Ray"}
+                        response_parts.append("Which service would you like? We offer: " + ", \n".join(services.keys()))
+
+                    print(" ".join(response_parts))
 
 if __name__ == "__main__":
     user_id = 9
