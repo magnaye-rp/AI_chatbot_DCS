@@ -138,6 +138,53 @@
     "Feel free to walk in anytime between 7 AM and 5 PM, Monday to Saturday. We're here for you!"
   ]
 },
+  {
+  "tag": "appointment",
+  "patterns": [
+    "I want to book an appointment",
+    "book an appointment",
+    "schedule an appointment",
+    "I'd like to make an appointment",
+    "can I book a consultation",
+    "set up a dental cleaning",
+    "I need to book a time",
+    "book me in",
+    "I want to schedule a visit",
+    "I want to book a service",
+    "appointment",
+    "I want to book for tomorrow at 10am",
+    "book an appointment for tomorrow at 10am",
+    "tomorrow 10am",
+    "tomorrow at 10 am",
+    "I want an appointment on Monday",
+    "Can I book for next Tuesday",
+    "I'm free on Friday at 2pm",
+    "I'd like to come in on the 15th of March",
+    "book me for a checkup on the 2024-03-10",
+    "I want to book a consultation for next week",
+    "I need a dental cleaning next Wednesday",
+    "Book me in for a cleaning next Monday at 3pm",
+    "Can I get a filling next Tuesday at 2:00pm",
+    "Book a root canal treatment for next month",
+    "Book an appointment for a checkup next Friday",
+    "I need a consultation next Saturday morning",
+    "Book me in for a cleaning next Sunday afternoon",
+    "Can I schedule a filling next Monday evening",
+    "Book a root canal treatment for next Tuesday at noon",
+    "I want to book a consultation for next week",
+    "I would like to book an appointment",
+    "I need to make an appointment",
+    "I want to book an appointment for a check-up"
+  ],
+  "responses": [
+    "Let's book that checkup! What day works best for you?",
+    "Thanks for reaching out—let’s find the right time for your visit.",
+    "The calendar’s open! What date works for you?",
+    "Okay, I can help with that. What date and time are you thinking of?",
+    "Sure, I can schedule that. What date and time?",
+    "I can help you with that.  What service and time?"
+  ]
+},
 {
   "tag": "fallback",
   "patterns": [
