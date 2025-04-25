@@ -12,7 +12,7 @@ app = Flask(__name__)
 api = Api(app)
 
 TIME_FORMAT = '%I:%M %p'
-MYSQL_TIME_FORMAT = '%H:%M:%S'  # Format expected by MySQL TIME column
+MYSQL_TIME_FORMAT = '%H:%M:%S'
 DATE_FORMATS = ['%Y-%m-%d', '%B %d', '%b %d', '%A', 'tomorrow']
 WORKING_HOURS = (7, 17)
 APPOINTMENT_DURATION = 30
@@ -146,7 +146,7 @@ class BookAppointment(Resource):
                 "appointment": {
                     "patient_id": args['patient_id'],
                     "date": date_obj.isoformat(),
-                    "time": time_obj.strftime(TIME_FORMAT), # Keep original format in response
+                    "time": time_obj.strftime(TIME_FORMAT),
                     "service": service,
                     "duration": duration,
                     "status": "booked",

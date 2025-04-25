@@ -67,18 +67,18 @@ embedding_layer = Embedding(
 dropout_embedding = Dropout(0.4)(embedding_layer)
 
 # First BiLSTM Layer (return_sequences=True to feed to the next layer)
-lstm_layer_1 = Bidirectional(LSTM(256, return_sequences=True))(dropout_embedding)
-dropout_lstm_1 = Dropout(0.3)(lstm_layer_1)
+lstm_layer_1 = Bidirectional(LSTM(128, return_sequences=True))(dropout_embedding)
+dropout_lstm_1 = Dropout(0.4)(lstm_layer_1)
 
 # Second BiLSTM Layer
-lstm_layer_2 = Bidirectional(LSTM(256))(dropout_lstm_1)
+lstm_layer_2 = Bidirectional(LSTM(128))(dropout_lstm_1)
 dropout_lstm_2 = Dropout(0.3)(lstm_layer_2)
 
 output_layer = Dense(len(label_encoder.classes_), activation="softmax")(dropout_lstm_2)
 
 model = keras.Model(inputs=input_layer, outputs=output_layer)
 model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.005),
     loss="sparse_categorical_crossentropy",
     metrics=["accuracy"]
 )
@@ -97,13 +97,13 @@ class_weights = class_weight.compute_class_weight(
     y=labels_encoded
 )
 class_weight_dict = dict(enumerate(class_weights))
-early_stop = EarlyStopping(monitor="val_loss", patience=100, restore_best_weights=True)
+early_stop = EarlyStopping(monitor="val_loss", patience=1000, restore_best_weights=True)
 
 history = model.fit(
     X_train,
     y_train,
-    epochs=300,
-    batch_size=32,
+    epochs=3000,
+    batch_size=128,
     validation_data=(X_val, y_val),
     class_weight=class_weight_dict,
     callbacks=[tensorboard_callback, early_stop, checkpoint_callback],
