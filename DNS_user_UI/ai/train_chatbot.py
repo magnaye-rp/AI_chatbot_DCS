@@ -64,15 +64,15 @@ embedding_layer = Embedding(
     weights=[embedding_matrix],
     trainable=True
 )(input_layer)
-dropout_embedding = Dropout(0.4)(embedding_layer)
+dropout_embedding = Dropout(0.5)(embedding_layer)
 
 # First BiLSTM Layer (return_sequences=True to feed to the next layer)
-lstm_layer_1 = Bidirectional(LSTM(128, return_sequences=True))(dropout_embedding)
+lstm_layer_1 = Bidirectional(LSTM(256, return_sequences=True))(dropout_embedding)
 dropout_lstm_1 = Dropout(0.4)(lstm_layer_1)
 
 # Second BiLSTM Layer
-lstm_layer_2 = Bidirectional(LSTM(128))(dropout_lstm_1)
-dropout_lstm_2 = Dropout(0.3)(lstm_layer_2)
+lstm_layer_2 = Bidirectional(LSTM(256))(dropout_lstm_1)
+dropout_lstm_2 = Dropout(0.2)(lstm_layer_2)
 
 output_layer = Dense(len(label_encoder.classes_), activation="softmax")(dropout_lstm_2)
 
@@ -97,7 +97,7 @@ class_weights = class_weight.compute_class_weight(
     y=labels_encoded
 )
 class_weight_dict = dict(enumerate(class_weights))
-early_stop = EarlyStopping(monitor="val_loss", patience=1000, restore_best_weights=True)
+early_stop = EarlyStopping(monitor="val_loss", patience=500, restore_best_weights=True)
 
 history = model.fit(
     X_train,
