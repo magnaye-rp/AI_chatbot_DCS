@@ -555,7 +555,7 @@ public final class dentistUI extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new dentistUI(1).setVisible(true);
+                new dentistUI(2).setVisible(true);
             }
         });
     }
