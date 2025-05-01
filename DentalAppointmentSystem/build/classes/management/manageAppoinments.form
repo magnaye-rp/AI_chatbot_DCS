@@ -121,7 +121,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="14" y="12" width="575" height="41"/>
+              <AbsoluteConstraints x="14" y="12" width="570" height="41"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -551,7 +551,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="APPOINTMENTS FOR TODAY"/>
+            <Property name="text" type="java.lang.String" value="IN-COMING APPOINTMENTS"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>

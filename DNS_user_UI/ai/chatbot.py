@@ -17,7 +17,6 @@ class Chatbot:
         self.api_key = "chatbot123"
         self.user_id = user_id
         self.model = load_model("/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DNS_user_UI/ai/chatbot_model_stacked_lstm.h5")
-        self.gui_callback = gui_callback
 
         with open("/Users/magnaye.rp/Documents/GitHub/AI_chatbot_DCS/DNS_user_UI/ai/tokenizer.json", "r") as file:
             word_index = json.load(file)
@@ -232,6 +231,6 @@ class Chatbot:
 
 
 if __name__ == "__main__":
-    user_id = 9
+    user_id = 7
     chatbot = Chatbot(user_id)
     chatbot.run()

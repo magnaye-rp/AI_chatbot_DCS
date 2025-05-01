@@ -27,31 +27,20 @@ public class paymentsPanel extends javax.swing.JInternalFrame {
                     + "INNER JOIN service s ON s.service_id = sd.service_id WHERE sd.dentist_id = ? "
                     + "AND YEARWEEK(sd.date_done, 1) = YEARWEEK(CURDATE(), 1) ";
             
-            String monTots = "SELECT SUM(s.service_cost) AS tots FROM services_done sd "
-                    + "INNER JOIN service s ON s.service_id = sd.service_id "
-                    + "WHERE "
-                    + "MONTH(sd.date_done) = MONTH(CURDATE()) AND "
-                    + "YEAR(sd.date_done) = YEAR(CURDATE()) AND sd.dentist_id = ?;";
+            String monTots = "SELECT SUM(s.service_cost) AS tots FROM services_done sd \n" +
+                    "INNER JOIN service s ON s.service_id = sd.service_id \n" +
+                    "WHERE MONTH(sd.date_done) = MONTH(CURDATE()) \n" +
+                    "AND YEAR(sd.date_done) = YEAR(CURDATE()) AND sd.dentist_id = ?;";
         
-            String query = "SELECT s.service_name, SUM(s.service_cost) AS tots "
-                    + "FROM services_done sd "
-                    + "INNER JOIN service s ON s.service_id = sd.service_id "
-                    + "WHERE sd.dentist_id = ? "
-                    + "AND YEARWEEK(sd.date_done, 1) = YEARWEEK(CURDATE(), 1) "
-                    + "GROUP BY sd.service_id ORDER BY s.service_name;";
+            String query = "CALL GetWeeklyServiceRevenue(?);";
 
-            String query1 = "SELECT s.service_name, SUM(s.service_cost) AS tots "
-                    + "FROM services_done sd "
-                    + "INNER JOIN service s ON s.service_id = sd.service_id "
-                    + "WHERE "
-                    + "MONTH(sd.date_done) = MONTH(CURDATE()) AND "
-                    + "YEAR(sd.date_done) = YEAR(CURDATE()) AND sd.dentist_id = ?;";
+            String query1 = "CALL GetMonthlyServiceRevenue(?);";
 
             try (Connection conn = Database.getConnection();
                  PreparedStatement wt = conn.prepareStatement(weekTots);
                  PreparedStatement mt = conn.prepareStatement(monTots);
-                 PreparedStatement pstmt = conn.prepareStatement(query);
-                 PreparedStatement rstmt = conn.prepareStatement(query1)) {
+                 CallableStatement pstmt = conn.prepareCall(query);
+                 CallableStatement rstmt = conn.prepareCall(query1)) {
 
                 pstmt.setInt(1, dent_id);
                 rstmt.setInt(1, dent_id);
@@ -74,7 +63,7 @@ public class paymentsPanel extends javax.swing.JInternalFrame {
                     Amount.setText(amount);
                 }
                 if(Mt.next()){
-                    float tots = Wt.getFloat("tots");
+                    float tots = Mt.getFloat("tots");
                     String amount = String.format("%.2f",tots);
                     Amount1.setText(amount);
                 }

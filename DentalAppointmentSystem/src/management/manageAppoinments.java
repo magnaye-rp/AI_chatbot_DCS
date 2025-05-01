@@ -33,7 +33,6 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     public void setupCalendar() {
         calendar = new Calendar();
         calendar.setCurrentView(CalendarView.Timetable);
-        calendar.setTheme(ThemeType.Dark);
 
         TimetableSettings settings = calendar.getTimetableSettings();
 
@@ -144,10 +143,11 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
     }
     
     void comboboxes(){
+        String serv_ = (String)servs.getSelectedItem();
         try (Connection conn = Database.getConnection();
-            CallableStatement stmt = conn.prepareCall("CALL getAvailableDentistATM('Consultation')");
+            CallableStatement stmt = conn.prepareCall("CALL getAvailableDentistATM(?)");
                 PreparedStatement stmt1 = conn.prepareStatement("SELECT service_name FROM service")) {
-
+            stmt.setString(1, serv_);
            ResultSet rs = stmt.executeQuery();
            ResultSet rs1 = stmt1.executeQuery();
            dents.removeAllItems();
@@ -298,7 +298,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
                 dentitsComboBoxItemStateChanged(evt);
             }
         });
-        jPanel1.add(dentitsComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 12, 575, 41));
+        jPanel1.add(dentitsComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 12, 570, 41));
 
         jTable1.setBackground(new java.awt.Color(57, 62, 70));
         jTable1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
@@ -537,7 +537,7 @@ public class manageAppoinments extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("APPOINTMENTS FOR TODAY");
+        jLabel5.setText("IN-COMING APPOINTMENTS");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 10, 370, 20));
 

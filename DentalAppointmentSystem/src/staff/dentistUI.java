@@ -99,7 +99,7 @@ public final class dentistUI extends javax.swing.JFrame {
                         job_done.setVisible(false);
                         break;
                     default:
-                        activity.setText("Unknown Status");
+                        activity.setText("On Standby");
                         job_done.setVisible(false);
                         break;
                 }
@@ -555,7 +555,7 @@ public final class dentistUI extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new dentistUI(2).setVisible(true);
+                new dentistUI(1).setVisible(true);
             }
         });
     }

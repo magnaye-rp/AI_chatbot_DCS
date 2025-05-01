@@ -22,6 +22,8 @@ import javax.swing.table.JTableHeader;
 import staff.Database;
 
 public class Settings extends javax.swing.JInternalFrame {
+    
+    Credentials creds = new Credentials();
 
     public Settings() {
         initComponents();
@@ -111,6 +113,20 @@ public class Settings extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        newPassword = new javax.swing.JPasswordField();
+        newId = new javax.swing.JTextField();
+        currentId = new javax.swing.JTextField();
+        currentPassword = new javax.swing.JPasswordField();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setFocusCycleRoot(false);
@@ -261,7 +277,7 @@ public class Settings extends javax.swing.JInternalFrame {
         );
 
         jPanel1.add(jPanel5);
-        jPanel5.setBounds(860, 500, 240, 40);
+        jPanel5.setBounds(860, 310, 240, 40);
         jPanel1.add(jSeparator1);
         jSeparator1.setBounds(10, 10, 1640, 10);
 
@@ -457,9 +473,9 @@ public class Settings extends javax.swing.JInternalFrame {
         jTable1.getColumnModel().removeColumn(jTable1.getColumnModel().getColumn(0));
 
         jPanel1.add(jScrollPane4);
-        jScrollPane4.setBounds(870, 40, 750, 450);
+        jScrollPane4.setBounds(870, 40, 750, 260);
         jPanel1.add(jSeparator4);
-        jSeparator4.setBounds(840, 520, 810, 10);
+        jSeparator4.setBounds(840, 330, 810, 10);
 
         slider.setMajorTickSpacing(20);
         slider.setMaximum(150);
@@ -472,11 +488,11 @@ public class Settings extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(slider);
-        slider.setBounds(1330, 580, 250, 30);
+        slider.setBounds(1320, 400, 250, 30);
 
         s_name.setEditable(false);
         jPanel1.add(s_name);
-        s_name.setBounds(870, 580, 400, 40);
+        s_name.setBounds(870, 400, 400, 40);
 
         s_cost.setEditable(false);
         s_cost.addActionListener(new java.awt.event.ActionListener() {
@@ -485,7 +501,7 @@ public class Settings extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(s_cost);
-        s_cost.setBounds(870, 660, 400, 40);
+        s_cost.setBounds(870, 480, 400, 40);
 
         jButton2.setBackground(new java.awt.Color(0, 173, 181));
         jButton2.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
@@ -498,7 +514,7 @@ public class Settings extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(1330, 660, 140, 40);
+        jButton2.setBounds(1320, 480, 140, 40);
 
         jButton3.setBackground(new java.awt.Color(0, 173, 181));
         jButton3.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
@@ -511,28 +527,134 @@ public class Settings extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(1490, 660, 130, 40);
+        jButton3.setBounds(1480, 480, 130, 40);
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("090");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(1590, 580, 30, 30);
+        jLabel1.setBounds(1580, 400, 30, 30);
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Service Cost");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(870, 640, 110, 20);
+        jLabel5.setBounds(870, 460, 110, 20);
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Duration in Minutes");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(1330, 560, 120, 20);
+        jLabel6.setBounds(1320, 380, 120, 20);
 
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Service Name");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(870, 557, 110, 20);
+        jLabel7.setBounds(870, 370, 110, 20);
+
+        jPanel7.setBackground(new java.awt.Color(34, 40, 49));
+
+        jLabel8.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("EDIT LOGIN CREDENTIALS");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(0, 4, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel1.add(jPanel7);
+        jPanel7.setBounds(860, 530, 320, 40);
+        jPanel1.add(jSeparator5);
+        jSeparator5.setBounds(840, 550, 810, 10);
+
+        newPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newPasswordActionPerformed(evt);
+            }
+        });
+        jPanel1.add(newPassword);
+        newPassword.setBounds(1180, 700, 291, 40);
+        jPanel1.add(newId);
+        newId.setBounds(860, 700, 280, 40);
+
+        currentId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentIdActionPerformed(evt);
+            }
+        });
+        jPanel1.add(currentId);
+        currentId.setBounds(860, 610, 280, 40);
+        jPanel1.add(currentPassword);
+        currentPassword.setBounds(1180, 610, 330, 40);
+
+        jButton5.setBackground(new java.awt.Color(0, 173, 181));
+        jButton5.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("SAVE");
+        jButton5.setBorderPainted(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton5);
+        jButton5.setBounds(1540, 700, 100, 40);
+
+        jButton6.setBackground(new java.awt.Color(0, 173, 181));
+        jButton6.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("CANCEL");
+        jButton6.setBorderPainted(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6);
+        jButton6.setBounds(1540, 610, 100, 40);
+
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("New Password");
+        jPanel1.add(jLabel9);
+        jLabel9.setBounds(1180, 680, 120, 17);
+
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("New LogIn ID");
+        jPanel1.add(jLabel10);
+        jLabel10.setBounds(860, 680, 120, 17);
+
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Current LogIn ID");
+        jPanel1.add(jLabel11);
+        jLabel11.setBounds(860, 590, 120, 17);
+
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Current Password");
+        jPanel1.add(jLabel12);
+        jLabel12.setBounds(1180, 590, 120, 17);
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/view.png"))); // NOI18N
+        jButton7.setBorderPainted(false);
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton7MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jButton7MouseReleased(evt);
+            }
+        });
+        jPanel1.add(jButton7);
+        jButton7.setBounds(1470, 700, 40, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -760,26 +882,83 @@ public class Settings extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void currentIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_currentIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_currentIdActionPerformed
+
+    private void newPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newPasswordActionPerformed
+
+    private void jButton7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MousePressed
+        newPassword.setEchoChar((char) 0);
+    }//GEN-LAST:event_jButton7MousePressed
+
+    private void jButton7MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseReleased
+        newPassword.setEchoChar('*');
+    }//GEN-LAST:event_jButton7MouseReleased
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String curId = creds.getLogInID();
+        String curPass = creds.getPass();
+        if (!"".equals(currentId.getText()) && !"".equals(currentPassword.getText())) {
+            if (curId.equals(currentId.getText()) && curPass.equals(currentPassword.getText())) {
+                 if (!"".equals(newId.getText())) {
+                    creds.setLogInID(newId.getText());
+                }
+                if (!"".equals(newPassword.getText())) {
+                    creds.setPass(newPassword.getText());
+                }
+                currentId.setText("");
+                currentPassword.setText("");
+                newId.setText("");
+                newPassword.setText("");
+            } else {
+                JOptionPane.showMessageDialog(null, "Incorrect current ID or password.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please fill in the current ID and password fields.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        currentId.setText("");
+        currentPassword.setText("");
+        newId.setText("");
+        newPassword.setText("");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField currentId;
+    private javax.swing.JPasswordField currentPassword;
     private javax.swing.JTable dentists;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -787,7 +966,10 @@ public class Settings extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField newId;
+    private javax.swing.JPasswordField newPassword;
     private javax.swing.JTable patients;
     private javax.swing.JTextField s_cost;
     private javax.swing.JTextField s_name;

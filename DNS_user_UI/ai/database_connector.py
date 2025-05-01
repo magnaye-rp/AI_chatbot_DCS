@@ -66,3 +66,4 @@ def execute_booking(pt_id, date_, time_, service=None):
 if __name__ == '__main__':
     result = execute_booking(1, '2025-04-25', '14:00', 'Tooth Extraction')
     print(result)
+

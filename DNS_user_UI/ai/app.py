@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from customtkinter import CTkLabel, CTkButton, CTkFrame, CTkScrollableFrame, CTkTextbox, CTkEntry, CTkToplevel
 from tkcalendar import DateEntry
-from ai.gui_chatbot import Chatbot
+from ai.gui_chatbot import Chatbot, ChatGUIApp
 import mysql.connector
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -9,9 +9,6 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 from customtkinter import CTkComboBox, CTkOptionMenu, CTkButton
-
-print("PYTHON EXECUTABLE:", sys.executable)
-
 
 def python_verify_login(number, password):
     try:
@@ -156,6 +153,9 @@ def getname(query, params):
     return result
 
 class App(ctk.CTk):
+    active_chatbot = 0
+    open = 0
+
     def __init__(self, user_id=None):
         super().__init__()
         self.title("DENTAL CARE & ORTHODONTICS PATIENT APP")
@@ -194,7 +194,6 @@ class App(ctk.CTk):
         self.content_outer_frame = CTkFrame(self.main_container, fg_color="#222831")
         self.content_outer_frame.pack(fill="both", side="left", expand=True)
 
-        # This will be replaced with actual content in each view method
         self.content_frame = None
 
     def create_nav_buttons(self):
@@ -243,11 +242,8 @@ class App(ctk.CTk):
             time_choices.append(f"{hour:02d}:00")
             time_choices.append(f"{hour:02d}:30")
 
-        services = ["Cleaning", "Filling", "Extraction", "Braces Consultation", "Whitening"]
-
         date_container = CTkFrame(self.content_frame, fg_color="#2B2B2B")
         date_container.pack(fill="x", pady=10)
-
 
         time_choices = [f"{h:02d}:{m:02d}" for h in range(8, 18) for m in (0, 30)]
         services = ["Dental Cleaning",
@@ -276,7 +272,7 @@ class App(ctk.CTk):
 
         # Service selector
         self.service_menu = CTkOptionMenu(date_container, values=services)
-        self.service_menu.set("Cleaning")
+        self.service_menu.set("Dental Cleaning")
         self.service_menu.pack(side="left", padx=5, pady=10)
 
         def book_now():
@@ -334,33 +330,42 @@ class App(ctk.CTk):
         self.current_date_label = CTkLabel(date_container, text="", font=("Arial", 16), text_color="white")
         self.current_date_label.pack(side="left", padx=10, pady=10)
 
-        # Appointments section
-        self.appointments_container = CTkFrame(self.content_frame, fg_color="#2B2B2B", corner_radius=10)
-        self.appointments_container.pack(fill="both", expand=True, pady=(10, 10))  # Added bottom padding
+        top_container = CTkFrame(self.content_frame, fg_color="#222831")
+        top_container.pack(fill="both", expand=True, pady=(10, 5))
 
-        self.appointments_section = CTkScrollableFrame(self.appointments_container, fg_color="#2B2B2B",
-                                                       corner_radius=10, height=450)
+        bottom_container = CTkFrame(self.content_frame, fg_color="#222831")
+        bottom_container.pack(fill="both", expand=True, pady=(5, 10))
+
+        # Use grid layout inside top_container
+        top_container.columnconfigure(0, weight=82)  # planner = 65%
+        top_container.columnconfigure(1, weight=18)  # pricing = 35%
+        top_container.rowconfigure(0, weight=1)
+
+        # Planner Section (left side)
+        planner_container = CTkFrame(top_container, fg_color="#2B2B2B", corner_radius=10)
+        planner_container.grid(row=0, column=0, sticky="nsew", padx=(0, 0), pady=0)
+
+        # Pricing Section (right side)
+        pricing_container = CTkFrame(top_container, fg_color="#2B2B2B", corner_radius=10)
+        pricing_container.grid(row=0, column=1, sticky="nsew", padx=(5, 0), pady=0)
+
+        history_container = CTkFrame(bottom_container, fg_color="#2B2B2B", corner_radius=10)
+        history_container.pack(side="left", fill="both", expand=True, padx=(0, 5), pady=0)
+
+        # Current appointments section (45% of bottom)
+        appointments_container = CTkFrame(bottom_container, fg_color="#2B2B2B", corner_radius=10)
+        appointments_container.pack(side="right", fill="both", expand=True, padx=(5, 0), pady=0)
+
+        # Create scrollable sections for each container
+        self.appointments_section = CTkScrollableFrame(planner_container, fg_color="#2B2B2B",
+                                                       corner_radius=10, height=300)
         self.appointments_section.pack(fill="both", expand=True, padx=5, pady=5)
 
-        # History and pricing section
-        history_pricing_frame = CTkFrame(self.content_frame, fg_color="#2B2B2B", corner_radius=10)
-        history_pricing_frame.pack(fill="both", expand=True, pady=(0, 10))
-
-        # Load history and pricing in the same row
-        self.load_history_and_pricing(history_pricing_frame)
-
-        # Load appointments
+        # Load data into each section
         self.load_appointments_as_planner(self.appointments_section)
-
-    def show_popup(self, title, message):
-        popup = CTkToplevel(self)
-        popup.title(title)
-        popup.geometry("350x160")
-        popup.grab_set()  # Makes it modal
-
-        CTkLabel(popup, text=message, font=("Arial", 14), text_color="white",
-                 wraplength=300, justify="center").pack(pady=20)
-        CTkButton(popup, text="OK", command=popup.destroy).pack(pady=10)
+        self.load_pricing(pricing_container)
+        self.load_history(history_container)
+        self.load_appointments(appointments_container)
 
     def refresh_appointments(self):
         for widget in self.appointments_section.winfo_children():
@@ -380,7 +385,7 @@ class App(ctk.CTk):
             cursor = conn.cursor()
             cursor.callproc('pythonAllAppointments', [self.user_id, selected_date])
 
-            for result in cursor.stored_results():  # Add this line to properly retrieve results
+            for result in cursor.stored_results():
                 for dentist, patient, service, appt_time in result:
                     time_str = appt_time.strftime("%H:%M")
                     planner[dentist][time_str] = (patient, service)
@@ -510,9 +515,7 @@ class App(ctk.CTk):
                                  text_color="white")
         pricing_label.pack(pady=10)
 
-        # Create scrollable container for prices
-        pricing_scroll_frame = CTkScrollableFrame(pricing_frame,
-                                                  fg_color="#30475E")  # Fixed: added scrollable container
+        pricing_scroll_frame = CTkScrollableFrame(pricing_frame, fg_color="#30475E")
         pricing_scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
         try:
@@ -522,13 +525,12 @@ class App(ctk.CTk):
             services = cursor.fetchall()
 
             for service, duration, price in services:
-                service_frame = CTkFrame(pricing_scroll_frame, fg_color="#1B262C",
-                                         corner_radius=5)  # Fixed: added background color
+                service_frame = CTkFrame(pricing_scroll_frame, fg_color="#1B262C", corner_radius=5)
                 service_frame.pack(fill="x", pady=3, padx=5, ipady=5)
 
                 price_formatted = f"₱{float(price):.2f}" if price else "N/A"
                 pricing_item = CTkLabel(service_frame,
-                                        text=f"{service} - {duration} minutes - {price_formatted}",
+                                        text=f"{service} - {duration} min - {price_formatted}",
                                         font=("Arial", 14), text_color="white", anchor="w")
                 pricing_item.pack(fill="x", padx=10)
         except mysql.connector.Error as err:
@@ -541,30 +543,123 @@ class App(ctk.CTk):
             if 'conn' in locals() and conn:
                 conn.close()
 
-    def show_settings(self):
-        self.clear_content_frame()
-
-        title = CTkLabel(self.content_frame, text="Settings", font=("Arial", 24, "bold"), text_color="white")
-        title.pack(pady=15)
-
-        settings_container = CTkScrollableFrame(self.content_frame, fg_color="#2B2B2B", corner_radius=10)
-        settings_container.pack(fill="both", expand=True, padx=20, pady=10)
-
+    def load_appointments(self, frame):
         try:
             conn = self.get_connection()
             cursor = conn.cursor()
-            query = "SELECT full_name, contact_num, address, status, password FROM patient WHERE patient_id = %s"
+            cursor.callproc('python_user_appointments', [self.user_id])
+
+            title = CTkLabel(frame, text="Current Appointments", font=("Arial", 20, "bold"),
+                             text_color="white")
+            title.pack(pady=10)
+
+            # Create a scrollable frame for the appointments table
+            scroll_frame = CTkScrollableFrame(frame, fg_color="#30475E")
+            scroll_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+            # Create a Treeview widget for the table
+            style = ttk.Style()
+            style.configure("Treeview", background="#30475E", foreground="white", fieldbackground="#30475E")
+            style.map('Treeview', background=[('selected', '#1B262C')])
+
+            tree = ttk.Treeview(scroll_frame, columns=("Dentist", "Service", "Date"), show="headings", height=8)
+
+            # Define column headings and widths
+            tree.heading("Dentist", text="Dentist")
+            tree.heading("Service", text="Service")
+            tree.heading("Date", text="Date")
+
+            tree.column("Dentist", width=100)
+            tree.column("Service", width=150)
+            tree.column("Date", width=100)
+
+            # Insert data into the table
+            for result in cursor.stored_results():
+                for dentist, service, date_done in result.fetchall():
+                    formatted_date = date_done.strftime("%Y-%m-%d") if isinstance(date_done, datetime) else date_done
+                    tree.insert("", tk.END, values=(dentist, service, formatted_date))
+
+            tree.pack(fill="both", expand=True)
+
+        except mysql.connector.Error as err:
+            error = CTkLabel(frame, text=f"Error loading appointments: {err}", font=("Arial", 14),
+                             text_color="red")
+            error.pack(pady=10)
+        finally:
+            if 'cursor' in locals() and cursor:
+                cursor.close()
+            if 'conn' in locals() and conn:
+                conn.close()
+
+    def show_popup(self, title, message):
+        popup = CTkToplevel(self)
+        popup.title(title)
+        popup.geometry("350x160")
+        popup.grab_set()
+
+        CTkLabel(popup, text=message, font=("Arial", 14), text_color="white",
+                 wraplength=300, justify="center").pack(pady=20)
+        CTkButton(popup, text="OK", command=popup.destroy).pack(pady=10)
+
+    def show_settings(self):
+        self.clear_content_frame()
+
+        title = CTkLabel(self.content_frame, text="Account Settings", font=("Arial", 24, "bold"), text_color="white")
+        title.pack(pady=15)
+
+        settings_container = CTkFrame(self.content_frame, fg_color="#2B2B2B", corner_radius=10)
+        settings_container.pack(fill="both", expand=True, padx=20, pady=10)
+
+        # Create a form container
+        form_frame = CTkFrame(settings_container, fg_color="#30475E", corner_radius=8)
+        form_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # Create entry variables
+        self.full_name_var = tk.StringVar()
+        self.contact_num_var = tk.StringVar()
+        self.address_var = tk.StringVar()
+        self.password_var = tk.StringVar()
+
+        # Label and entry for full name
+        name_label = CTkLabel(form_frame, text="Full Name:", font=("Arial", 16, "bold"), text_color="white")
+        name_label.grid(row=0, column=0, padx=10, pady=(20, 5), sticky="w")
+        name_entry = CTkEntry(form_frame, textvariable=self.full_name_var, width=400, height=40)
+        name_entry.grid(row=0, column=1, padx=10, pady=(20, 5), sticky="ew")
+
+        # Label and entry for contact number
+        contact_label = CTkLabel(form_frame, text="Contact Number:", font=("Arial", 16, "bold"), text_color="white")
+        contact_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        contact_entry = CTkEntry(form_frame, textvariable=self.contact_num_var, width=400, height=40)
+        contact_entry.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+
+        # Label and entry for address
+        address_label = CTkLabel(form_frame, text="Address:", font=("Arial", 16, "bold"), text_color="white")
+        address_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        address_entry = CTkEntry(form_frame, textvariable=self.address_var, width=400, height=40)
+        address_entry.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
+
+        # Label and entry for password
+        password_label = CTkLabel(form_frame, text="Password:", font=("Arial", 16, "bold"), text_color="white")
+        password_label.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+        password_entry = CTkEntry(form_frame, textvariable=self.password_var, width=400, height=40, show="•")
+        password_entry.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+
+        # Configure the grid to expand properly
+        form_frame.grid_columnconfigure(1, weight=1)
+
+        # Load data from database
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            query = "SELECT `full_name`, `contact_num`, `address`, `password` FROM `patient` WHERE `patient_id` = %s"
             cursor.execute(query, (self.user_id,))
             result = cursor.fetchone()
 
             if result:
-                labels = ["Full Name", "Contact Number", "Address", "Status", "Password"]
-                for i, value in enumerate(result):
-                    info_frame = CTkFrame(settings_container, fg_color="#30475E", corner_radius=8)
-                    info_frame.pack(fill="x", pady=5, ipady=10)
-
-                    label = CTkLabel(info_frame, text=f"{labels[i]}: {value}", font=("Arial", 16), text_color="white")
-                    label.pack(padx=10)
+                self.full_name_var.set(result[0])
+                self.contact_num_var.set(result[1])
+                self.address_var.set(result[2])
+                self.password_var.set(result[3])
 
             cursor.close()
             conn.close()
@@ -573,6 +668,54 @@ class App(ctk.CTk):
             error_label = CTkLabel(settings_container, text=f"Database Error: {err}", font=("Arial", 16),
                                    text_color="red")
             error_label.pack(pady=10)
+
+        # Create update button
+        def update_profile():
+            try:
+                conn = self.get_connection()
+                cursor = conn.cursor()
+
+                update_query = """
+                UPDATE patient 
+                SET full_name = %s, contact_num = %s, address = %s, password = %s 
+                WHERE patient_id = %s
+                """
+
+                cursor.execute(update_query, (
+                    self.full_name_var.get(),
+                    self.contact_num_var.get(),
+                    self.address_var.get(),
+                    self.password_var.get(),
+                    self.user_id
+                ))
+
+                conn.commit()
+                cursor.close()
+                conn.close()
+
+                # Update the profile label in the sidebar
+                self.profile_label.configure(text=self.full_name_var.get())
+
+                # Show success message
+                self.show_popup("Success", "Your profile has been updated successfully!")
+
+            except mysql.connector.Error as err:
+                self.show_popup("Error", f"Failed to update profile: {err}")
+
+        # Button frame
+        button_frame = CTkFrame(form_frame, fg_color="#30475E")
+        button_frame.grid(row=4, column=0, columnspan=2, pady=20)
+
+        update_button = CTkButton(button_frame, text="Update Profile",
+                                  font=("Arial", 16, "bold"),
+                                  fg_color="#1B262C", hover_color="#0F4C75",
+                                  command=update_profile,
+                                  width=200, height=50)
+        update_button.pack(pady=10)
+
+        # Add a status message label below the update button
+        self.status_label = CTkLabel(form_frame, text="", font=("Arial", 14), text_color="#4CC9F0")
+        self.status_label.grid(row=5, column=0, columnspan=2, pady=10)
 
     def getname(query, params):
         conn = mysql.connector.connect( host="localhost",
@@ -601,74 +744,16 @@ class App(ctk.CTk):
             raise
 
     def open_chatbot_view(self):
-        self.clear_content_frame()
-
-        chat_container = CTkFrame(self.content_frame, fg_color="#2B2B2B", corner_radius=10)
-        chat_container.pack(fill="both", expand=True)
-
-        chat_header = CTkLabel(chat_container, text="Chat with Dental Assistant",
-                               font=("Arial", 20, "bold"), text_color="white")
-        chat_header.pack(pady=10)
-
-        # Chat display area
-        chat_display_container = CTkFrame(chat_container, fg_color="#222831")
-        chat_display_container.pack(padx=10, pady=5, fill="both", expand=True)
-
-        self.chatbot_instance = Chatbot(self.user_id, self.display_bot_response)
-        self.chat_display = CTkTextbox(chat_display_container,
-                                       state="disabled",
-                                       height=400,
-                                       wrap="word")
-        self.chat_display.pack(padx=5, pady=5, fill="both", expand=True)
-
-        self.chat_display.tag_config("user", foreground="black")
-        self.chat_display.tag_config("bot", foreground="green")
-
-        # Input area with Send button in a row
-        input_container = CTkFrame(chat_container, fg_color="#2B2B2B")
-        input_container.pack(padx=10, pady=10, fill="x")
-
-        self.input_entry = CTkEntry(input_container,
-                                    placeholder_text="Type your message...")
-        self.input_entry.pack(side="left", padx=5, fill="x", expand=True)
-        self.input_entry.bind("<Return>", self.send_message)
-
-        self.send_button = CTkButton(input_container,
-                                     text="Send",
-                                     command=self.send_message)
-        self.send_button.pack(side="right", padx=5)
-
-        self.add_bot_message("Hello! How can I help you today?")
-
-    def send_message(self, event=None):
-        user_input = self.input_entry.get().strip()
-        if user_input and self.chatbot_instance:
-            self.add_user_message(f"You: {user_input}")
-            self.input_entry.delete(0, "end")
-            self.chatbot_instance.run_chat(user_input)
-
-    def add_user_message(self, message):
-        self.chat_display.configure(state="normal")
-        self.chat_display.insert("end", message + "\n", "user")
-        self.chat_display.configure(state="disabled")
-        self.chat_display.see("end")
-
-    def add_bot_message(self, message):
-        self.chat_display.configure(state="normal")
-        self.chat_display.insert("end", message + "\n", "bot")
-        self.chat_display.configure(state="disabled")
-        self.chat_display.see("end")
-
-    def display_bot_response(self, message):
-        self.add_bot_message(f"Bot: {message}")
-
-
+        active_chatbot = 0
+        if active_chatbot == 0:
+            root = ctk.CTkToplevel()
+            root.geometry("800x600")
+            ChatGUIApp(root, self.user_id)
 
 
 def run_app(user_id):
     app = App(user_id)
     app.mainloop()
-
 
 if __name__ == "__main__":
     app = LoginPage()

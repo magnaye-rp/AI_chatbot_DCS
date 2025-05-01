@@ -495,6 +495,11 @@ public class managePatients extends javax.swing.JInternalFrame {
                 jTextField3FocusLost(evt);
             }
         });
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jTextField3);
         jTextField3.setBounds(50, 580, 370, 40);
 
@@ -805,7 +810,7 @@ public class managePatients extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jTextField2FocusLost
 
     private void jTextField3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusGained
-        if((jTextField3.getText()).equals("Enter Contact Number...")){
+        if((jTextField3.getText()).equals("Contact Number...")){
             jTextField3.setText("");
             jTextField3.setForeground(Color.BLACK);
         }
@@ -813,7 +818,7 @@ public class managePatients extends javax.swing.JInternalFrame {
 
     private void jTextField3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusLost
         if((jTextField3.getText()).equals("")){
-            jTextField3.setText("Enter Contact Number...");
+            jTextField3.setText("Contact Number...");
             jTextField3.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_jTextField3FocusLost
@@ -831,6 +836,10 @@ public class managePatients extends javax.swing.JInternalFrame {
             jTextField1.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_jTextField1FocusLost
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

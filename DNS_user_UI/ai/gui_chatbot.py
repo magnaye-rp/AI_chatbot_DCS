@@ -44,75 +44,17 @@ class Chatbot:
         }
 
     def convert_to_12hr_format(self, time_str):
-        """
-        Convert various time formats to a standardized 12-hour format (hh:mm AM/PM)
-        """
         try:
-            # Clean input
             time_str = time_str.strip().lower().replace(" ", "")
-
-            # Handle various formats
             if 'am' in time_str or 'pm' in time_str:
-                # Remove any dots in a.m./p.m.
-                time_str = time_str.replace(".", "")
-
-                # Handle cases like "11am", "11:30am"
-                if ':' not in time_str:
-                    # Split the numeric part from am/pm
-                    for i, char in enumerate(time_str):
-                        if not char.isdigit():
-                            hour = time_str[:i]
-                            suffix = time_str[i:]
-                            break
-                    else:
-                        return time_str  # No am/pm found
-
-                    # Handle single digit hours
-                    try:
-                        hour = int(hour)
-                        if hour == 0:  # treat 0am as 12am
-                            hour = 12
-                        elif hour > 12:  # treat 13pm as 1pm, etc.
-                            hour = hour % 12
-                            if hour == 0:
-                                hour = 12
-
-                        time_obj = datetime.strptime(f"{hour}{suffix}", "%I%p")
-                    except ValueError:
-                        return time_str
-                else:
-                    # Handle standard formats with colon separator
-                    try:
-                        time_obj = datetime.strptime(time_str, "%I:%M%p")
-                    except ValueError:
-                        try:
-                            # Try handling formats like "9.30am"
-                            time_str = time_str.replace(".", ":")
-                            time_obj = datetime.strptime(time_str, "%I:%M%p")
-                        except ValueError:
-                            return time_str
+                fmt = "%I%p" if ':' not in time_str else "%I:%M%p"
+                time_obj = datetime.strptime(time_str, fmt)
             else:
-                # Handle 24-hour format
-                try:
-                    # Try standard 24-hour format
-                    time_obj = datetime.strptime(time_str, "%H:%M")
-                except ValueError:
-                    try:
-                        # Try 24-hour without colon (e.g., "1430")
-                        if len(time_str) == 4 and time_str.isdigit():
-                            hour = time_str[:2]
-                            minute = time_str[2:]
-                            time_obj = datetime.strptime(f"{hour}:{minute}", "%H:%M")
-                        elif len(time_str) <= 2 and time_str.isdigit():  # Just hours like "14"
-                            time_obj = datetime.strptime(f"{time_str}:00", "%H:%M")
-                        else:
-                            return time_str
-                    except ValueError:
-                        return time_str
+                time_obj = datetime.strptime(time_str, "%H:%M")
 
-            return time_obj.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")
-        except Exception:
-            # If all parsing attempts fail, return original string
+            return time_obj.strftime("%I:%M %p")
+        except ValueError:
+            print(f"Error converting time: {time_str}")
             return time_str
 
     def parse_date(self, date_str, current_date=None):
@@ -339,37 +281,35 @@ class Chatbot:
         text = user_input.lower()
 
         date_patterns = [
-            (r"\b(tomorrow)\b", "tomorrow"),
-            (r"\b(today)\b", "today"),
-            (r"\bon\s+(\w+\s?\d{1,2})\b", "%B %d"),  # "on April 15"
-            (r"\bon\s+(\w+)\b", "%A"),  # "on Monday"
-            (r"\b(\d{1,2}/\d{1,2})\b", "%m/%d")  # "4/15"
+            (r"tomorrow", "tomorrow"),
+            (r"today", "today"),
+            (r"on (\w+\s?\d{1,2})", "%B %d"),
+            (r"on (\w+)", "%A"),
+            (r"(\d{1,2}/\d{1,2})", "%m/%d")
         ]
 
         for pattern, fmt in date_patterns:
             match = re.search(pattern, text)
             if match:
-                if fmt in ["tomorrow", "today"]:
-                    date_str = fmt
-                else:
-                    date_str = match.group(1)
-                details["date"] = self.parse_date(date_str)
+                date_str = match.group(1) if fmt != "tomorrow" else "tomorrow"
+                details["date"] = date_str
                 break
 
         time_patterns = [
-            (r"\bat\s+(\d{1,2}:\d{2})\s*(am|pm)\b", None),
-            (r"\bat\s+(\d{1,2})\s*(am|pm)\b", None)
+            (r"at (\d{1,2}):(\d{2})\s?(am|pm)", "%I:%M %p"),
+            (r"at (\d{1,2})\s?(am|pm)", "%I %p")
         ]
 
-        for pattern, _ in time_patterns:
+        for pattern, fmt in time_patterns:
             match = re.search(pattern, text)
             if match:
-                time_str = f"{match.group(1)} {match.group(2)}"
+                time_str = f"{match.group(1)}:{match.group(2)} {match.group(3)}" if ":" in fmt else f"{match.group(1)} {match.group(2)}"
                 details["time"] = self.convert_to_12hr_format(time_str)
                 break
 
+        # Extract Service
         for pattern, service in self.services.items():
-            if re.search(r"\b" + pattern + r"\b", text, re.IGNORECASE):
+            if re.search(pattern, text):
                 details["service"] = service
                 break
 
@@ -387,16 +327,13 @@ class Chatbot:
     def run_chat(self, user_input):
         predicted_tag, confidence = self.predict_intent(user_input)
 
-        if predicted_tag == "appointment":
-            response = f"Confidence: {confidence:.2f}"
-
         if confidence >= CONFIDENCE_THRESHOLD and predicted_tag in self.responses:
             bot_response = np.random.choice(self.responses[predicted_tag])
         else:
             bot_response = np.random.choice(self.fallback_responses)
 
         if predicted_tag == "appointment":
-            appointment_details = self.extract_appointment_details(user_input)
+            appointment_details = self.extract_appointment_details_easy(user_input)
             required = ['date', 'time', 'service']
 
             if all(k in appointment_details for k in required):
@@ -454,19 +391,6 @@ class Chatbot:
             except requests.exceptions.RequestException as e:
                 return f"Error communicating with booking service: {e}"
         return "I need more details to book an appointment. Please provide date, time, and service."
-
-    def run_chat(self, user_input):
-        predicted_tag, confidence = self.predict_intent(user_input)
-
-        if confidence >= CONFIDENCE_THRESHOLD:
-            if predicted_tag == "appointment":
-                response = self.process_appointment(user_input)
-            else:
-                response = self.get_response(predicted_tag)
-        else:
-            response = np.random.choice(self.fallback_responses)
-
-        self.gui_callback(response)
 
 import customtkinter as ctk
 

@@ -1,16 +1,14 @@
 package staff;
 
 import java.awt.Color;
+import javax.swing.JOptionPane;
+import management.management;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author magnaye.rp
- */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
     public Login() {
         initComponents();
     }
@@ -21,32 +19,43 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        loginIdField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        passwordField = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(34, 40, 49));
+        jPanel1.setLayout(null);
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Contact Number");
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(31, 70, 100, 17);
 
-        jTextField3.setForeground(new java.awt.Color(204, 204, 204));
-        jTextField3.setText("Contact Number...");
-        jTextField3.addFocusListener(new java.awt.event.FocusAdapter() {
+        loginIdField.setForeground(new java.awt.Color(204, 204, 204));
+        loginIdField.setText("Contact Number...");
+        loginIdField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextField3FocusGained(evt);
+                loginIdFieldFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField3FocusLost(evt);
+                loginIdFieldFocusLost(evt);
             }
         });
+        jPanel1.add(loginIdField);
+        loginIdField.setBounds(31, 90, 370, 40);
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Password");
+        jPanel1.add(jLabel6);
+        jLabel6.setBounds(31, 160, 100, 17);
+        jPanel1.add(passwordField);
+        passwordField.setBounds(31, 183, 370, 41);
 
         jButton1.setBackground(new java.awt.Color(0, 173, 181));
         jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
@@ -58,83 +67,75 @@ public class Login extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1);
+        jButton1.setBounds(142, 255, 123, 37);
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("MAGNAYE DENTAL CARE & ORTHODONTICS");
+        jLabel1.setText("DENTIST LOGIN");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(146, 12, 139, 46);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(142, 142, 142)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPasswordField1)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(19, 19, 19))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(3, 3, 3)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 140)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 41));
+        jLabel2.setText("DENTIST");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(-50, 190, 630, 160);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 431, 328));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusGained
-        if((jTextField3.getText()).equals("Enter Contact Number...")){
-            jTextField3.setText("");
-            jTextField3.setForeground(Color.BLACK);
+    private void loginIdFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loginIdFieldFocusGained
+        if((loginIdField.getText()).equals("Enter Contact Number...")){
+            loginIdField.setText("");
+            loginIdField.setForeground(Color.BLACK);
         }
-    }//GEN-LAST:event_jTextField3FocusGained
+    }//GEN-LAST:event_loginIdFieldFocusGained
 
-    private void jTextField3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusLost
-        if((jTextField3.getText()).equals("")){
-            jTextField3.setText("Enter Contact Number...");
-            jTextField3.setForeground(Color.GRAY);
+    private void loginIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_loginIdFieldFocusLost
+        if((loginIdField.getText()).equals("")){
+            loginIdField.setText("Enter Contact Number...");
+            loginIdField.setForeground(Color.GRAY);
         }
-    }//GEN-LAST:event_jTextField3FocusLost
+    }//GEN-LAST:event_loginIdFieldFocusLost
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        String enteredId = loginIdField.getText();
+        String enteredPassword = new String(passwordField.getPassword());
+
+        // Check if the fields are empty
+        if ("".equals(enteredId) || "".equals(enteredPassword)) {
+            JOptionPane.showMessageDialog(rootPane, "Please enter both Login ID and Password.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Proceed with the database query
+            try (Connection conn = Database.getConnection();
+                 CallableStatement cs = conn.prepareCall("CALL verifyDentist(?, ?)")) {
+
+                // Set the input parameters
+                cs.setString(1, enteredId);
+                cs.setString(2, enteredPassword);
+
+                // Execute the query and get the result
+                ResultSet rs = cs.executeQuery();
+
+                if (rs.next()) {
+                    // Successful login, open the dentist UI
+                    new dentistUI(rs.getInt("dentist_id")).setVisible(true);
+                } else {
+                    // Invalid credentials, reset fields and show error message
+                    loginIdField.setText("");
+                    passwordField.setText("");
+                    JOptionPane.showMessageDialog(rootPane, "Incorrect Login ID or Password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (SQLException ex) {
+                // Handle any SQL exception that occurs
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(rootPane, "Database connection error. Please try again later.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -152,10 +153,11 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField loginIdField;
+    private javax.swing.JPasswordField passwordField;
     // End of variables declaration//GEN-END:variables
 }
