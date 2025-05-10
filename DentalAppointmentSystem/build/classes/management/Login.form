@@ -111,7 +111,7 @@
                   <Font name="Helvetica Neue" size="150" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="32" green="d" red="6" type="rgb"/>
+                  <Color blue="44" green="2" red="2" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="LOGIN"/>
               </Properties>

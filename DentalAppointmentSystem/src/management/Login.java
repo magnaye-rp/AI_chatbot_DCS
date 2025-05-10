@@ -61,7 +61,7 @@ public class Login extends javax.swing.JFrame {
         passwordField.setBounds(70, 160, 266, 37);
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 150)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(6, 13, 50));
+        jLabel1.setForeground(new java.awt.Color(2, 2, 68));
         jLabel1.setText("LOGIN");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(-30, 150, 590, 170);

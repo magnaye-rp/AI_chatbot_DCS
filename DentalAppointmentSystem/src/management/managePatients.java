@@ -621,13 +621,13 @@ public class managePatients extends javax.swing.JInternalFrame {
 
         gaugeChart1.setColor1(new java.awt.Color(118, 189, 34));
         jPanel1.add(gaugeChart1);
-        gaugeChart1.setBounds(1310, 500, 290, 250);
+        gaugeChart1.setBounds(1290, 490, 310, 260);
 
         jLabel7.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("RATE OF NO-SHOW APPOINTMENTS");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(1300, 750, 320, 20);
+        jLabel7.setBounds(1280, 750, 320, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
